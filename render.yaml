@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: belablog
+    env: static
+    buildCommand: hugo --minify
+    staticPublishPath: ./public
+    envVars:
+      - key: HUGO_VERSION
+        value: 0.133.0
+      - key: HUGO_ENV
+        value: production
+      - key: HUGO_ENABLEGITINFO
+        value: false 
