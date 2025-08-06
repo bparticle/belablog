@@ -3,7 +3,7 @@ languageCode: en-us
 paginate: 10
 title: Site van Béla
 copyright: Béla
-timeout: 120s
+timeout: 300s
 
 # Theme i18n support
 # Available values: ar, bn, ca, de, el, en, es, fr, hu, id, it, ja, ko, nl, pt-br, th, uk, zh-cn, zh-hk, zh-tw
@@ -79,6 +79,8 @@ params:
     
     imageProcessing:
         cover:
+            enabled: false
+        content:
             enabled: false
 
     comments:
