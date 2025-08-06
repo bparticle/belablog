@@ -1,0 +1,28 @@
+{
+  "name": "belablog",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "migrate": "node scripts/migrate-posts.js",
+    "fix-posts": "node scripts/fix-posts.js",
+    "fix-all": "node scripts/fix-all-posts.js",
+    "new-post": "node scripts/new-post.js"
+  },
+  "dependencies": {
+    "astro": "^4.0.0",
+    "@astrojs/mdx": "^2.0.0",
+    "@astrojs/rss": "^4.0.0",
+    "@astrojs/sitemap": "^3.0.0",
+    "@astrojs/netlify": "^4.0.0",
+    "sharp": "^0.33.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+} 

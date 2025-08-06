@@ -1,0 +1,205 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { getCollection } from 'astro:content';
+
+// Get all posts, sorted by date
+const allPosts = await getCollection('posts');
+const posts = allPosts
+  .filter(post => !post.data.draft)
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+
+// Group posts by year
+const postsByYear = new Map();
+posts.forEach(post => {
+  const year = post.data.date.getFullYear();
+  if (!postsByYear.has(year)) {
+    postsByYear.set(year, []);
+  }
+  postsByYear.get(year).push(post);
+});
+---
+
+<Layout title="Archives - Béla's Blog" description="All posts in chronological order">
+  <Header />
+  
+  <main class="main-content">
+    <div class="container">
+      <section class="archives-page">
+        <h1 class="page-title">Archives</h1>
+        <p class="page-description">All posts in chronological order</p>
+        
+        <div class="archives-content">
+          {Array.from(postsByYear.entries()).sort(([a], [b]) => b - a).map(([year, yearPosts]) => (
+            <div class="year-section">
+              <h2 class="year-title">{year}</h2>
+              <div class="year-posts">
+                {yearPosts.map((post) => (
+                  <article class="archive-post">
+                    <div class="post-date">
+                      <time datetime={post.data.date.toISOString()}>
+                        {post.data.date.toLocaleDateString('nl-NL', {
+                          month: 'short',
+                          day: 'numeric'
+                        })}
+                      </time>
+                    </div>
+                    <div class="post-info">
+                      <h3 class="post-title">
+                        <a href={`/posts/${post.slug}`}>{post.data.title}</a>
+                      </h3>
+                      {post.data.description && (
+                        <p class="post-description">{post.data.description}</p>
+                      )}
+                      {post.data.categories && post.data.categories.length > 0 && (
+                        <div class="post-categories">
+                          {post.data.categories.map((category) => (
+                            <a href={`/categories/${category.toLowerCase()}`} class="category-tag">
+                              {category}
+                            </a>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+  </main>
+  
+  <Footer />
+</Layout>
+
+<style>
+  .main-content {
+    min-height: calc(100vh - 200px);
+  }
+
+  .archives-page {
+    padding: 2rem 0;
+  }
+
+  .page-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0 0 1rem 0;
+    color: var(--body-text-color);
+  }
+
+  .page-description {
+    font-size: 1.125rem;
+    color: #6b7280;
+    margin: 0 0 3rem 0;
+  }
+
+  .archives-content {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .year-section {
+    margin-bottom: 3rem;
+  }
+
+  .year-title {
+    font-size: 2rem;
+    font-weight: 600;
+    margin: 0 0 1.5rem 0;
+    color: var(--body-text-color);
+    border-bottom: 2px solid var(--accent-color);
+    padding-bottom: 0.5rem;
+  }
+
+  .year-posts {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .archive-post {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.2s ease;
+  }
+
+  .archive-post:hover {
+    background-color: rgba(59, 130, 246, 0.05);
+  }
+
+  .post-date {
+    min-width: 80px;
+    font-size: 0.875rem;
+    color: #6b7280;
+    font-weight: 500;
+  }
+
+  .post-info {
+    flex: 1;
+  }
+
+  .post-title {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+
+  .post-title a {
+    color: var(--body-text-color);
+  }
+
+  .post-title a:hover {
+    color: var(--accent-color);
+  }
+
+  .post-description {
+    margin: 0 0 0.5rem 0;
+    color: #6b7280;
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  .post-categories {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .category-tag {
+    background: var(--accent-color);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    text-decoration: none;
+  }
+
+  .category-tag:hover {
+    background: var(--accent-color-darker);
+    color: white;
+  }
+
+  @media (max-width: 768px) {
+    .page-title {
+      font-size: 2rem;
+    }
+
+    .year-title {
+      font-size: 1.5rem;
+    }
+
+    .archive-post {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .post-date {
+      min-width: auto;
+    }
+  }
+</style> 

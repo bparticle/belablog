@@ -1,0 +1,315 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { getCollection } from 'astro:content';
+
+// Get all posts, sorted by date
+const allPosts = await getCollection('posts');
+const posts = allPosts
+  .filter(post => !post.data.draft)
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+  .slice(0, 10); // Show latest 10 posts
+
+// Get categories
+const categories = await getCollection('categories');
+---
+
+<Layout title="Béla's Blog" description="Allemaal dingetjes die Béla doet">
+  <Header />
+  
+  <main class="main-content">
+    <div class="container">
+      <!-- Hero Section -->
+      <section class="hero">
+        <div class="hero-content">
+          <h1 class="hero-title">Welkom op Béla's Blog! 🎉</h1>
+          <p class="hero-description">
+            Hier kun je allemaal dingetjes zien die ik leuk vind en heb geleerd.
+          </p>
+          <div class="hero-interests">
+            <span class="interest">Tinkercad ⌨️</span>
+            <span class="interest">Origami 🙇‍♂️</span>
+            <span class="interest">Tekenen ✏️</span>
+            <span class="interest">Knutselen ✂️</span>
+            <span class="interest">Filmpjes maken 🎥</span>
+            <span class="interest">Techniek ⚙️</span>
+            <span class="interest">Electriciteit 💡</span>
+            <span class="interest">Strips en boeken lezen 📕</span>
+            <span class="interest">Met hondjes spelen 🐶</span>
+            <span class="interest">Filmpjes kijken 🎬</span>
+            <span class="interest">In een kartonnen doos zitten 📦</span>
+            <span class="interest">Liedjes zingen 🎵</span>
+            <span class="interest">Leuke geluidjes maken 🎺</span>
+            <span class="interest">3D printen 🚢</span>
+            <span class="interest">Gamen 🎮</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Latest Posts -->
+      <section class="latest-posts">
+        <h2 class="section-title">Laatste Posts</h2>
+        <div class="posts-grid">
+          {posts.map((post) => (
+            <article class="post-card">
+              {post.data.image && (
+                <div class="post-image">
+                  <img src={`/posts/${post.slug}/${post.data.image}`} alt={post.data.title} />
+                </div>
+              )}
+              <div class="post-content">
+                <div class="post-meta">
+                  <time datetime={post.data.date.toISOString()}>
+                    {post.data.date.toLocaleDateString('nl-NL', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </time>
+                  {post.data.categories && post.data.categories.length > 0 && (
+                    <div class="post-categories">
+                      {post.data.categories.map((category) => (
+                        <span class="category-tag">{category}</span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <h3 class="post-title">
+                  <a href={`/posts/${post.slug}`}>{post.data.title}</a>
+                </h3>
+                {post.data.description && (
+                  <p class="post-description">{post.data.description}</p>
+                )}
+              </div>
+            </article>
+          ))}
+        </div>
+        {posts.length >= 10 && (
+          <div class="view-all">
+            <a href="/posts" class="view-all-link">Bekijk alle posts →</a>
+          </div>
+        )}
+      </section>
+
+      <!-- Categories -->
+      <section class="categories">
+        <h2 class="section-title">Categories</h2>
+        <div class="categories-grid">
+          {categories.map((category) => (
+            <a href={`/categories/${category.id}`} class="category-card">
+              <div class="category-content">
+                <h3 class="category-title">{category.data.title}</h3>
+                {category.data.description && (
+                  <p class="category-description">{category.data.description}</p>
+                )}
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .main-content {
+    min-height: calc(100vh - 200px);
+  }
+
+  .hero {
+    padding: 4rem 0;
+    text-align: center;
+  }
+
+  .hero-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin: 0 0 1rem 0;
+    color: var(--body-text-color);
+  }
+
+  .hero-description {
+    font-size: 1.25rem;
+    color: #6b7280;
+    margin: 0 0 2rem 0;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-interests {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .interest {
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--accent-color);
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .latest-posts {
+    margin: 4rem 0;
+  }
+
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .post-card {
+    background: var(--body-bg-color);
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .post-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  .post-image {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+  }
+
+  .post-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .post-content {
+    padding: 1.5rem;
+  }
+
+  .post-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+    color: #6b7280;
+  }
+
+  .post-categories {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .category-tag {
+    background: var(--accent-color);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+  }
+
+  .post-title {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+
+  .post-title a {
+    color: var(--body-text-color);
+  }
+
+  .post-title a:hover {
+    color: var(--accent-color);
+  }
+
+  .post-description {
+    margin: 0;
+    color: #6b7280;
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  .view-all {
+    text-align: center;
+    margin-top: 2rem;
+  }
+
+  .view-all-link {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background: var(--accent-color);
+    color: white;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+  }
+
+  .view-all-link:hover {
+    background: var(--accent-color-darker);
+    color: white;
+  }
+
+  .categories {
+    margin: 4rem 0;
+  }
+
+  .categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .category-card {
+    background: var(--body-bg-color);
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-decoration: none;
+  }
+
+  .category-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  .category-title {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--body-text-color);
+  }
+
+  .category-description {
+    margin: 0;
+    color: #6b7280;
+    font-size: 0.875rem;
+  }
+
+  @media (max-width: 768px) {
+    .hero-title {
+      font-size: 2rem;
+    }
+
+    .posts-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .categories-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style> 

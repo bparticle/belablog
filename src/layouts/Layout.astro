@@ -1,0 +1,136 @@
+---
+export interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  type?: 'website' | 'article';
+  date?: Date;
+  categories?: string[];
+  tags?: string[];
+}
+
+const {
+  title,
+  description = "Béla's Blog - Allemaal dingetjes die Béla doet",
+  image,
+  type = 'website',
+  date,
+  categories = [],
+  tags = []
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const socialImageURL = image ? new URL(image, Astro.url) : undefined;
+---
+
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <link rel="canonical" href={canonicalURL} />
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    {socialImageURL && <meta property="og:image" content={socialImageURL} />}
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {socialImageURL && <meta name="twitter:image" content={socialImageURL} />}
+    
+    <!-- Article specific meta -->
+    {type === 'article' && date && (
+      <meta property="article:published_time" content={date.toISOString()} />
+    )}
+    {categories.length > 0 && (
+      <meta property="article:section" content={categories[0]} />
+    )}
+    
+    <!-- Preload fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="app">
+      <slot />
+    </div>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --accent-color: #3b82f6;
+    --accent-color-darker: #2563eb;
+    --body-text-color: #374151;
+    --body-bg-color: #ffffff;
+    --link-background-color: 59, 130, 246;
+    --link-background-opacity: 0.1;
+    --link-background-opacity-hover: 0.2;
+    --article-line-height: 1.8;
+  }
+
+  [data-theme="dark"] {
+    --body-text-color: #d1d5db;
+    --body-bg-color: #111827;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--body-bg-color);
+    color: var(--body-text-color);
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+  }
+
+  a {
+    text-decoration: none;
+    color: var(--accent-color);
+  }
+
+  a:hover {
+    color: var(--accent-color-darker);
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  .section-title {
+    text-transform: uppercase;
+    margin-top: 0;
+    margin-bottom: 10px;
+    display: block;
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: var(--body-text-color);
+  }
+
+  .section-title a {
+    color: var(--body-text-color);
+  }
+</style> 

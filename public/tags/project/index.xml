@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Project on Béla&#39;s Blog</title>
+        <link>http://localhost:1313/tags/project/</link>
+        <description>Recent content in Project on Béla&#39;s Blog</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>en</language>
+        <copyright>Béla</copyright>
+        <lastBuildDate>Mon, 27 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/project/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>NAGO Project</title>
+        <link>http://localhost:1313/p/nago/</link>
+        <pubDate>Mon, 27 Jan 2025 00:00:00 +0000</pubDate>
+        
+        <guid>http://localhost:1313/p/nago/</guid>
+        <description>&lt;img src="http://localhost:1313/p/nago/IMG_20250806_123000_092.jpg" alt="Featured image of post NAGO Project" /&gt;&lt;h2 id=&#34;nago-project&#34;&gt;NAGO Project
+&lt;/h2&gt;&lt;p&gt;Hier zijn enkele afbeeldingen en animaties van het NAGO project:&lt;/p&gt;
+&lt;h3 id=&#34;originele-afbeelding&#34;&gt;Originele afbeelding
+&lt;/h3&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/nago/IMG_20250806_123000_092.jpg&#34;
+	width=&#34;4000&#34;
+	height=&#34;3000&#34;
+	srcset=&#34;http://localhost:1313/p/nago/IMG_20250806_123000_092_hu8776106071998017659.jpg 480w, http://localhost:1313/p/nago/IMG_20250806_123000_092_hu9770065927689078642.jpg 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;133&#34;
+		data-flex-basis=&#34;320px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h3 id=&#34;geoptimaliseerde-animaties&#34;&gt;Geoptimaliseerde animaties
+&lt;/h3&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/nago/NAGO1_s-ezgif.com-optimize.gif&#34;
+	width=&#34;600&#34;
+	height=&#34;600&#34;
+	srcset=&#34;http://localhost:1313/p/nago/NAGO1_s-ezgif.com-optimize_hu10926429571892468857.gif 480w, http://localhost:1313/p/nago/NAGO1_s-ezgif.com-optimize_hu11798428066003893334.gif 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;100&#34;
+		data-flex-basis=&#34;240px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/nago/NAGO2_s-ezgif.com-optimize.gif&#34;
+	width=&#34;600&#34;
+	height=&#34;600&#34;
+	srcset=&#34;http://localhost:1313/p/nago/NAGO2_s-ezgif.com-optimize_hu14997026496415786121.gif 480w, http://localhost:1313/p/nago/NAGO2_s-ezgif.com-optimize_hu15959086681573413449.gif 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;100&#34;
+		data-flex-basis=&#34;240px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/nago/NAGO3_s-ezgif.com-optimize.gif&#34;
+	width=&#34;600&#34;
+	height=&#34;600&#34;
+	srcset=&#34;http://localhost:1313/p/nago/NAGO3_s-ezgif.com-optimize_hu15844938116030220354.gif 480w, http://localhost:1313/p/nago/NAGO3_s-ezgif.com-optimize_hu11239031775079894746.gif 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;100&#34;
+		data-flex-basis=&#34;240px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/nago/NAGO4_s-ezgif.com-optimize.gif&#34;
+	width=&#34;600&#34;
+	height=&#34;600&#34;
+	srcset=&#34;http://localhost:1313/p/nago/NAGO4_s-ezgif.com-optimize_hu10859713227511194366.gif 480w, http://localhost:1313/p/nago/NAGO4_s-ezgif.com-optimize_hu9536181159594321147.gif 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;100&#34;
+		data-flex-basis=&#34;240px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/nago/NAGO5_s-ezgif.com-optimize.gif&#34;
+	width=&#34;600&#34;
+	height=&#34;600&#34;
+	srcset=&#34;http://localhost:1313/p/nago/NAGO5_s-ezgif.com-optimize_hu14823839543107772601.gif 480w, http://localhost:1313/p/nago/NAGO5_s-ezgif.com-optimize_hu10285316853095609897.gif 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;100&#34;
+		data-flex-basis=&#34;240px&#34;
+	
+&gt;&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

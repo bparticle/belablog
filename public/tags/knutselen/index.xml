@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Knutselen on Béla&#39;s Blog</title>
+        <link>http://localhost:1313/tags/knutselen/</link>
+        <description>Recent content in Knutselen on Béla&#39;s Blog</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>en</language>
+        <copyright>Béla</copyright>
+        <lastBuildDate>Sun, 22 Sep 2024 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/knutselen/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Don Krieg schild</title>
+        <link>http://localhost:1313/p/don-krieg-schild/</link>
+        <pubDate>Sun, 22 Sep 2024 00:00:00 +0000</pubDate>
+        
+        <guid>http://localhost:1313/p/don-krieg-schild/</guid>
+        <description>&lt;img src="http://localhost:1313/p/don-krieg-schild/img_6126.jpeg" alt="Featured image of post Don Krieg schild" /&gt;&lt;p&gt;Don Krieg&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>Deur des doods</title>
+        <link>http://localhost:1313/p/deur-des-doods/</link>
+        <pubDate>Mon, 02 Sep 2024 01:00:00 +0000</pubDate>
+        
+        <guid>http://localhost:1313/p/deur-des-doods/</guid>
+        <description>&lt;img src="http://localhost:1313/p/deur-des-doods/deur-des-doods.png" alt="Featured image of post Deur des doods" /&gt;&lt;p&gt;Béla vond een leeg doosje filament en maakte er een deur des doods van.&lt;/p&gt;
+&lt;div class=&#34;video-wrapper&#34;&gt;
+    &lt;video
+    controls
+    src=&#34;deur-des-doods.mp4&#34;
+    
+    
+    &gt;
+        &lt;p&gt;
+            Your browser doesn&#39;t support HTML5 video. Here is a
+            &lt;a href=&#34;deur-des-doods.mp4&#34;&gt;link to the video&lt;/a&gt; instead.
+        &lt;/p&gt;
+    &lt;/video&gt;
+&lt;/div&gt;
+
+</description>
+        </item>
+        
+    </channel>
+</rss>

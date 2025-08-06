@@ -1,0 +1,121 @@
+---
+import { getCollection } from 'astro:content';
+
+const categories = await getCollection('categories');
+---
+
+<header class="site-header">
+  <div class="container">
+    <div class="header-content">
+      <div class="site-brand">
+        <a href="/" class="site-title">
+          <span class="emoji">😐</span>
+          <span class="title">Béla's Blog</span>
+        </a>
+        <p class="site-subtitle">Allemaal dingetjes die Béla doet</p>
+      </div>
+      
+      <nav class="main-nav">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/categories">Categories</a></li>
+          <li><a href="/archives">Archives</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    background: var(--body-bg-color);
+    border-bottom: 1px solid #e5e7eb;
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+  }
+
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .site-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .site-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--body-text-color);
+  }
+
+  .site-title:hover {
+    color: var(--accent-color);
+  }
+
+  .emoji {
+    font-size: 1.75rem;
+  }
+
+  .title {
+    font-size: 1.25rem;
+  }
+
+  .site-subtitle {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #6b7280;
+    font-style: italic;
+  }
+
+  .main-nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 2rem;
+  }
+
+  .main-nav a {
+    font-weight: 500;
+    padding: 0.5rem 0;
+    position: relative;
+  }
+
+  .main-nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--accent-color);
+    transition: width 0.3s ease;
+  }
+
+  .main-nav a:hover::after {
+    width: 100%;
+  }
+
+  @media (max-width: 768px) {
+    .header-content {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .main-nav ul {
+      gap: 1rem;
+    }
+  }
+</style> 

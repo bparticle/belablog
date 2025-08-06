@@ -1,0 +1,64 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-info">
+        <p>&copy; {currentYear} Béla. Allemaal dingetjes die Béla doet.</p>
+      </div>
+      <div class="footer-links">
+        <a href="/" aria-label="Home">🏠</a>
+        <a href="/categories" aria-label="Categories">📂</a>
+        <a href="/archives" aria-label="Archives">📅</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--body-bg-color);
+    border-top: 1px solid #e5e7eb;
+    padding: 2rem 0;
+    margin-top: 4rem;
+  }
+
+  .footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-info p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 0.875rem;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .footer-links a {
+    font-size: 1.25rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.2s ease;
+  }
+
+  .footer-links a:hover {
+    background-color: rgba(59, 130, 246, 0.1);
+  }
+
+  @media (max-width: 768px) {
+    .footer-content {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+</style> 
