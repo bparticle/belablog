@@ -1,0 +1,156 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import LeftSidebar from '../../components/LeftSidebar.astro';
+import RightSidebar from '../../components/RightSidebar.astro';
+
+const posts = await getCollection('posts');
+
+// Get all unique tags with post counts
+const tagCounts = new Map<string, number>();
+const originalTagNames = new Map<string, string>();
+
+posts.forEach(post => {
+  if (post.data.tags) {
+    post.data.tags.forEach(tag => {
+      const tagLower = tag.toLowerCase();
+      tagCounts.set(tagLower, (tagCounts.get(tagLower) || 0) + 1);
+      // Keep the first occurrence of the original tag name
+      if (!originalTagNames.has(tagLower)) {
+        originalTagNames.set(tagLower, tag);
+      }
+    });
+  }
+});
+
+const sortedTags = Array.from(tagCounts.entries())
+  .sort(([a], [b]) => a.localeCompare(b))
+  .map(([tagLower, count]) => ({ 
+    tag: tagLower, 
+    originalName: originalTagNames.get(tagLower) || tagLower,
+    count 
+  }));
+---
+
+<Layout 
+  title="All Tags - Béla's Blog"
+  description="Browse all tags and find posts by topic"
+  type="website"
+>
+  <div class="main-layout">
+    <LeftSidebar />
+    
+    <main class="main-content">
+      <div class="tags-header">
+        <h1 class="tags-title">All Tags</h1>
+        <p class="tags-description">Browse posts by topic</p>
+      </div>
+      
+                    <div class="tags-grid">
+         {sortedTags.map(({ tag, originalName, count }) => (
+           <a href={`/tags/${encodeURIComponent(tag)}`} class="tag-card">
+             <div class="tag-info">
+               <h3 class="tag-name">{originalName}</h3>
+               <p class="tag-count">{count} post{count === 1 ? '' : 's'}</p>
+             </div>
+            <div class="tag-arrow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14"/>
+                <path d="m12 5 7 7-7 7"/>
+              </svg>
+            </div>
+          </a>
+        ))}
+      </div>
+    </main>
+    
+    <RightSidebar />
+  </div>
+</Layout>
+
+<style>
+  .tags-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .tags-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    color: var(--body-text-color);
+  }
+
+  .tags-description {
+    font-size: 1.125rem;
+    color: var(--muted-text);
+    margin: 0;
+  }
+
+  .tags-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+  }
+
+  .tag-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    background: var(--body-bg-color);
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s ease;
+  }
+
+  .tag-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    border-color: var(--accent-color);
+  }
+
+  .tag-info {
+    flex: 1;
+  }
+
+  .tag-name {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem 0;
+    color: var(--body-text-color);
+    text-transform: capitalize;
+  }
+
+  .tag-count {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin: 0;
+  }
+
+  .tag-arrow {
+    color: #6b7280;
+    transition: color 0.2s ease;
+  }
+
+  .tag-card:hover .tag-arrow {
+    color: var(--accent-color);
+  }
+
+  .tag-arrow svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  @media (max-width: 768px) {
+    .tags-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .tags-title {
+      font-size: 2rem;
+    }
+  }
+</style> 

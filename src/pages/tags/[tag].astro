@@ -1,0 +1,240 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import LeftSidebar from '../../components/LeftSidebar.astro';
+import RightSidebar from '../../components/RightSidebar.astro';
+
+// Get the tag from the URL params
+const { tag } = Astro.params;
+
+// If no tag provided, redirect to tags index
+if (!tag) {
+  return Astro.redirect('/tags');
+}
+
+const posts = await getCollection('posts');
+
+// Filter posts by tag (handle URL-encoded spaces)
+const decodedTag = decodeURIComponent(tag);
+console.log('Looking for tag:', decodedTag);
+
+const taggedPosts = posts.filter(post => {
+  if (!post.data.tags) return false;
+  
+  const hasTag = post.data.tags.some(postTag => {
+    const match = postTag.toLowerCase() === decodedTag.toLowerCase();
+    if (match) {
+      console.log('Found tag in post:', post.data.title, 'Tag:', postTag);
+    }
+    return match;
+  });
+  
+  return hasTag;
+}).sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+
+console.log('Found posts:', taggedPosts.length);
+
+// Find the original tag name for display
+const originalTagName = posts.find(post => 
+  post.data.tags && post.data.tags.some(postTag => 
+    postTag.toLowerCase() === decodedTag.toLowerCase()
+  )
+)?.data.tags?.find(postTag => 
+  postTag.toLowerCase() === decodedTag.toLowerCase()
+) || decodedTag;
+
+console.log('Original tag name:', originalTagName);
+---
+
+<Layout 
+  title={`Posts tagged "${originalTagName}" - Béla's Blog`}
+  description={`All posts tagged with "${originalTagName}"`}
+  type="website"
+>
+  <div class="main-layout">
+    <LeftSidebar />
+    
+    <main class="main-content">
+             <div class="tag-header">
+         <h1 class="tag-title">Posts tagged "{originalTagName}"</h1>
+         <p class="tag-count">{taggedPosts.length} post{taggedPosts.length === 1 ? '' : 's'} found</p>
+       </div>
+      
+      {taggedPosts.length > 0 ? (
+        <div class="posts-grid">
+          {taggedPosts.map((post) => (
+            <article class="post-card">
+              <a href={`/posts/${post.slug}`} class="post-card-link">
+                {post.data.image && (
+                  <div class="post-image">
+                    <img src={`/posts/${post.slug}/${post.data.image}`} alt={post.data.title} />
+                  </div>
+                )}
+                <div class="post-content">
+                  <div class="post-meta">
+                    <time datetime={post.data.date.toISOString()}>
+                      {post.data.date.toLocaleDateString('nl-NL', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}
+                    </time>
+                    {post.data.categories && post.data.categories.length > 0 && (
+                      <div class="post-categories">
+                        {post.data.categories.map((category) => (
+                          <span class="category-tag">
+                            {category}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <h3 class="post-title">
+                    {post.data.title}
+                  </h3>
+                  {post.data.description && (
+                    <p class="post-description">{post.data.description}</p>
+                  )}
+                </div>
+              </a>
+            </article>
+          ))}
+        </div>
+      ) : (
+        <div class="no-posts">
+          <p>No posts found with this tag.</p>
+          <a href="/" class="back-link">← Back to all posts</a>
+        </div>
+      )}
+    </main>
+    
+    <RightSidebar />
+  </div>
+</Layout>
+
+<style>
+  .tag-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .tag-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    color: var(--body-text-color);
+  }
+
+  .tag-count {
+    font-size: 1.125rem;
+    color: var(--muted-text);
+    margin: 0;
+  }
+
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  .post-card {
+    background: var(--body-bg-color);
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .post-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  .post-card-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
+  }
+
+  .post-image {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+  }
+
+  .post-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .post-content {
+    padding: 1.5rem;
+  }
+
+  .post-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+    color: #6b7280;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .post-categories {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .category-tag {
+    background: var(--accent-color);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+  }
+
+  .post-title {
+    color: var(--body-text-color);
+    margin: 0 0 0.5rem 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+
+  .post-description {
+    margin: 0;
+    color: #6b7280;
+    line-height: 1.5;
+  }
+
+  .no-posts {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #6b7280;
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-top: 1rem;
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .back-link:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 768px) {
+    .posts-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .tag-title {
+      font-size: 2rem;
+    }
+  }
+</style> 

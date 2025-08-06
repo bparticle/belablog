@@ -78,10 +78,15 @@ const sortedTags = Array.from(allTags).sort();
       TAGS
     </h3>
     <div class="tags-grid">
-      {sortedTags.map((tag) => (
-        <span class="tag-button">{tag}</span>
+      {sortedTags.slice(0, 10).map((tag) => (
+        <a href={`/tags/${encodeURIComponent(tag.toLowerCase())}`} class="tag-button">{tag}</a>
       ))}
     </div>
+    {sortedTags.length > 10 && (
+      <div class="view-all-tags">
+        <a href="/tags" class="view-all-link">View all tags →</a>
+      </div>
+    )}
   </div>
 </aside>
 
@@ -235,5 +240,22 @@ const sortedTags = Array.from(allTags).sort();
     background: var(--accent-color);
     color: white;
     border-color: var(--accent-color);
+  }
+
+  .view-all-tags {
+    margin-top: 1rem;
+    text-align: center;
+  }
+
+  .view-all-link {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+
+  .view-all-link:hover {
+    color: var(--accent-color-darker);
   }
 </style> 

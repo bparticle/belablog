@@ -23,37 +23,39 @@ const sortedPosts = posts.sort((a, b) => new Date(b.data.date).getTime() - new D
       <div class="posts-grid">
         {sortedPosts.map((post) => (
           <article class="post-card">
-            {post.data.image && (
-              <div class="post-image">
-                <img src={`/posts/${post.slug}/${post.data.image}`} alt={post.data.title} />
-              </div>
-            )}
-            <div class="post-content">
-              <div class="post-meta">
-                <time datetime={post.data.date.toISOString()}>
-                  {post.data.date.toLocaleDateString('nl-NL', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                  })}
-                </time>
-                {post.data.categories && post.data.categories.length > 0 && (
-                  <div class="post-categories">
-                    {post.data.categories.map((category) => (
-                      <a href={`/categories/${category.toLowerCase()}`} class="category-tag">
-                        {category}
-                      </a>
-                    ))}
-                  </div>
+            <a href={`/posts/${post.slug}`} class="post-card-link">
+              {post.data.image && (
+                <div class="post-image">
+                  <img src={`/posts/${post.slug}/${post.data.image}`} alt={post.data.title} />
+                </div>
+              )}
+              <div class="post-content">
+                <div class="post-meta">
+                  <time datetime={post.data.date.toISOString()}>
+                    {post.data.date.toLocaleDateString('nl-NL', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </time>
+                  {post.data.categories && post.data.categories.length > 0 && (
+                    <div class="post-categories">
+                      {post.data.categories.map((category) => (
+                        <span class="category-tag">
+                          {category}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <h3 class="post-title">
+                  {post.data.title}
+                </h3>
+                {post.data.description && (
+                  <p class="post-description">{post.data.description}</p>
                 )}
               </div>
-              <h3 class="post-title">
-                <a href={`/posts/${post.slug}`}>{post.data.title}</a>
-              </h3>
-              {post.data.description && (
-                <p class="post-description">{post.data.description}</p>
-              )}
-            </div>
+            </a>
           </article>
         ))}
       </div>
@@ -89,6 +91,13 @@ const sortedPosts = posts.sort((a, b) => new Date(b.data.date).getTime() - new D
   .post-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  .post-card-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
   }
 
   .post-image {
@@ -143,13 +152,9 @@ const sortedPosts = posts.sort((a, b) => new Date(b.data.date).getTime() - new D
     font-weight: 600;
   }
 
-  .post-title a {
+  .post-title {
     color: var(--body-text-color);
-    text-decoration: none;
-  }
-
-  .post-title a:hover {
-    color: var(--accent-color);
+    margin: 0 0 0.5rem 0;
   }
 
   .post-description {
