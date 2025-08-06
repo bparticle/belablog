@@ -1,26 +1,27 @@
 ---
+import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import LeftSidebar from '../components/LeftSidebar.astro';
 import RightSidebar from '../components/RightSidebar.astro';
-import { getCollection } from 'astro:content';
 
-// Get all posts, sorted by date
-const allPosts = await getCollection('posts');
-const posts = allPosts
-  .filter(post => !post.data.draft)
-  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+// Get all posts
+const posts = await getCollection('posts');
 
-// Get categories
-const categories = await getCollection('categories');
+// Sort posts by date (newest first)
+const sortedPosts = posts.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
 ---
 
-<Layout title="Béla's Blog" description="Allemaal dingetjes die Béla doet">
+<Layout 
+  title="Béla's Blog"
+  description="Allemaal dingetjes die Béla doet"
+  type="website"
+>
   <div class="main-layout">
     <LeftSidebar />
     
     <main class="main-content">
       <div class="posts-grid">
-        {posts.map((post) => (
+        {sortedPosts.map((post) => (
           <article class="post-card">
             {post.data.image && (
               <div class="post-image">
@@ -36,10 +37,12 @@ const categories = await getCollection('categories');
                     day: 'numeric'
                   })}
                 </time>
-                {post.data.tags && post.data.tags.length > 0 && (
-                  <div class="post-tags">
-                    {post.data.tags.map((tag) => (
-                      <span class="tag">{tag}</span>
+                {post.data.categories && post.data.categories.length > 0 && (
+                  <div class="post-categories">
+                    {post.data.categories.map((category) => (
+                      <a href={`/categories/${category.toLowerCase()}`} class="category-tag">
+                        {category}
+                      </a>
                     ))}
                   </div>
                 )}
@@ -58,12 +61,20 @@ const categories = await getCollection('categories');
     
     <RightSidebar />
   </div>
+  
+  <!-- Floating search button -->
+  <a href="/search" class="floating-search-btn" title="Search posts (Ctrl+K)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"/>
+      <path d="m21 21-4.35-4.35"/>
+    </svg>
+  </a>
 </Layout>
 
 <style>
   .posts-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 2rem;
   }
 
@@ -103,19 +114,27 @@ const categories = await getCollection('categories');
     margin-bottom: 1rem;
     font-size: 0.875rem;
     color: #6b7280;
+    flex-wrap: wrap;
+    gap: 0.5rem;
   }
 
-  .post-tags {
+  .post-categories {
     display: flex;
     gap: 0.5rem;
   }
 
-  .tag {
-    background: rgba(59, 130, 246, 0.1);
-    color: var(--accent-color);
+  .category-tag {
+    background: var(--accent-color);
+    color: white;
     padding: 0.25rem 0.5rem;
     border-radius: 0.25rem;
     font-size: 0.75rem;
+    text-decoration: none;
+  }
+
+  .category-tag:hover {
+    background: var(--accent-color-darker);
+    color: white;
   }
 
   .post-title {
@@ -126,6 +145,7 @@ const categories = await getCollection('categories');
 
   .post-title a {
     color: var(--body-text-color);
+    text-decoration: none;
   }
 
   .post-title a:hover {
@@ -135,13 +155,53 @@ const categories = await getCollection('categories');
   .post-description {
     margin: 0;
     color: #6b7280;
-    font-size: 0.875rem;
     line-height: 1.5;
+  }
+
+  .floating-search-btn {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 56px;
+    height: 56px;
+    background: var(--accent-color);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.2s ease;
+    z-index: 100;
+  }
+
+  .floating-search-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    background: var(--accent-color-darker);
+  }
+
+  .floating-search-btn svg {
+    width: 24px;
+    height: 24px;
   }
 
   @media (max-width: 768px) {
     .posts-grid {
       grid-template-columns: 1fr;
+    }
+
+    .floating-search-btn {
+      bottom: 1rem;
+      right: 1rem;
+      width: 48px;
+      height: 48px;
+    }
+
+    .floating-search-btn svg {
+      width: 20px;
+      height: 20px;
     }
   }
 </style> 
