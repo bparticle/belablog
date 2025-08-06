@@ -24,13 +24,22 @@ const metaImage = image ? new URL(image, Astro.site) : undefined;
 ---
 
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="nl" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
+    
+    <!-- Theme initialization script - prevents flash of unstyled content -->
+    <script is:inline>
+      // Set theme before page renders to prevent flash
+      (function() {
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+      })();
+    </script>
     
     <!-- Canonical URL -->
     <link rel="canonical" href={canonicalURL} />
