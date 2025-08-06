@@ -1,0 +1,32 @@
+backend:
+  name: bitbucket
+  repo: bpatyn/belablog  # Replace with your Bitbucket username and repository
+  branch: master  # Branch to update (main, master, etc.)
+  auth_type: implicit
+  app_id: K8YacuyFcNq2dUvyBM  # Replace with your Bitbucket OAuth App ID
+  redirect_uri: https://belablog.netlify.app/admin  # Replace with your site's URL
+
+media_folder: "content/post/{{slug}}"  # Store images in the same folder as the post
+public_folder: "/post/{{slug}}"  # Public URL for accessing images
+
+collections:
+  - name: "posts"
+    label: "Posts"
+    folder: "content/post"
+    create: true
+    slug: "{{slug}}"
+    path: "{{slug}}/index"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime", format: "YYYY-MM-DD HH:mm:ssZ" }  # Custom date format
+      - { label: "Description", name: "description", widget: "text" }
+      - { label: "Image", name: "image", widget: "image", required: false }
+      
+        # Tags as a multi-select dropdown
+      - { label: "Tags", name: "tags", widget: "select", multiple: true, options: ["Tekeningen", "Tinkercad", "Design", "Engineering", "3D Printing", "Experiment", "Animation", "Fresco", "Knutselen", "3D"], allow_add: true }
+
+      # Categories as a multi-select dropdown
+      - { label: "Categories", name: "categories", widget: "select", multiple: true, options: ["STEM", "Art", "Crafts", "Audio-Visual", "Books", "Gaming", "Stories"], allow_add: true }
+
+
+      - { label: "Body", name: "body", widget: "markdown" }

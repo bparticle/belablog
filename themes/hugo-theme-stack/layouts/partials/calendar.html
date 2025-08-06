@@ -1,0 +1,18 @@
+<div class="calendar">
+    {{ $posts := where .Context.Site.Pages "Type" "post" }}
+    {{ if $posts }}
+        {{ $years := slice }}
+        {{ range $posts }}
+            {{ $year := .Date.Format "2006" }}
+            {{ if not (in $years $year) }}
+                {{ $years = $years | append $year }}
+            {{ end }}
+        {{ end }}
+        {{ range $years }}
+            {{ $yearPosts := where $posts "Date.Year" (string .) }}
+            {{ partial "calendar/year.html" (dict "Year" . "Pages" $yearPosts) }}
+        {{ end }}
+    {{ else }}
+        <p>No posts available to display on the calendar.</p>
+    {{ end }}
+</div>

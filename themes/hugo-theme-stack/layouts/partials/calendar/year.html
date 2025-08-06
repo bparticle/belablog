@@ -1,0 +1,11 @@
+<div class="calendar-year">
+  <h2>{{ .Year }}</h2>
+  {{ $months := slice "01" "02" "03" "04" "05" "06" "07" "08" "09" "10" "11" "12" }}
+  {{ range $months }}
+      {{ $monthPosts := where $.Pages "Date.Format" "01" . }}
+      <p>Month: {{ . }} - Posts: {{ len $monthPosts }}</p> <!-- Debug info -->
+      {{ if gt (len $monthPosts) 0 }}
+          {{ partial "calendar/month.html" (dict "Month" . "Pages" $monthPosts) }}
+      {{ end }}
+  {{ end }}
+</div>

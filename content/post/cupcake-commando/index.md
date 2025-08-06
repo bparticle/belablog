@@ -1,0 +1,18 @@
+---
+title: Het Kapitein Cupcake commando centrum
+description: In de Dogman boeken van Dav Pilkey is er een Kapitein Cupcake personage en Béla heeft het commando centrum nagemaakt.
+slug: cupcake-commando
+date: 2024-05-01 01:00:00+0000
+image: 02.jpg
+tags:
+  - Tekeningen
+categories:
+    - Books
+    - Art
+---
+
+Kapitein Cupcake commando centrum in Béla zijn kamer.
+
+![](03.jpg "Cupcake commando 1") ![](02.jpg "Cupcake commando 3")
+
+![](00.jpg "Cupcake commando 1") ![](01.jpg "Cupcake commando 2") 
