@@ -1,0 +1,310 @@
+---
+import Layout from '../layouts/Layout.astro';
+import LeftSidebar from '../components/LeftSidebar.astro';
+import RightSidebar from '../components/RightSidebar.astro';
+import { getCollection } from 'astro:content';
+
+// Get all posts for search
+const posts = await getCollection('posts');
+
+// Prepare posts data for client-side search
+const postsData = posts.map(post => ({
+  slug: post.slug,
+  title: post.data.title,
+  description: post.data.description || '',
+  date: post.data.date,
+  categories: post.data.categories || [],
+  tags: post.data.tags || [],
+  image: post.data.image || null,
+  content: post.body // Include content for full-text search
+}));
+---
+
+<Layout title="Search - Béla's Blog" description="Search posts on Béla's blog">
+  <div class="main-layout">
+    <LeftSidebar />
+    
+    <main class="main-content">
+      <section class="search-page">
+        <h1 class="page-title">Search</h1>
+        <p class="page-description">Search through all posts</p>
+        
+        <div class="search-container">
+          <div class="search-input-container">
+            <input 
+              type="text" 
+              id="search-input" 
+              placeholder="Type to search posts..." 
+              class="search-input"
+            />
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="m21 21-4.35-4.35"/>
+            </svg>
+          </div>
+          
+          <div id="search-results" class="search-results">
+            <p class="search-placeholder">Start typing to search posts...</p>
+          </div>
+        </div>
+      </section>
+    </main>
+    
+    <RightSidebar />
+  </div>
+</Layout>
+
+<script define:vars={{ postsData }}>
+  // Client-side search functionality
+  const searchInput = document.getElementById('search-input');
+  const searchResults = document.getElementById('search-results');
+  
+  // Function to highlight search terms
+  function highlightText(text, query) {
+    if (!query) return text;
+    const regex = new RegExp(`(${query})`, 'gi');
+    return text.replace(regex, '<mark>$1</mark>');
+  }
+  
+  // Function to get preview text
+  function getPreview(content, query) {
+    if (!content) return '';
+    const text = content.replace(/<[^>]*>/g, ''); // Remove HTML tags
+    if (!query) return text.substring(0, 150) + '...';
+    
+    const index = text.toLowerCase().indexOf(query.toLowerCase());
+    if (index === -1) return text.substring(0, 150) + '...';
+    
+    const start = Math.max(0, index - 50);
+    const end = Math.min(text.length, index + query.length + 100);
+    return '...' + text.substring(start, end) + '...';
+  }
+  
+  searchInput?.addEventListener('input', (e) => {
+    const query = (e.target as HTMLInputElement).value.toLowerCase().trim();
+    
+    if (query.length < 2) {
+      searchResults.innerHTML = '<p class="search-placeholder">Start typing to search posts...</p>';
+      return;
+    }
+    
+    // Search through posts
+    const results = postsData.filter(post => {
+      const searchableText = [
+        post.title,
+        post.description,
+        post.content,
+        ...post.categories,
+        ...post.tags
+      ].join(' ').toLowerCase();
+      
+      return searchableText.includes(query);
+    });
+    
+    if (results.length === 0) {
+      searchResults.innerHTML = '<p class="no-results">No posts found matching your search.</p>';
+    } else {
+      searchResults.innerHTML = `
+        <div class="results-list">
+          <p class="results-count">Found ${results.length} result${results.length === 1 ? '' : 's'}</p>
+          ${results.map(post => {
+            const preview = getPreview(post.content, query);
+            const highlightedTitle = highlightText(post.title, query);
+            const highlightedPreview = highlightText(preview, query);
+            
+            return `
+              <article class="search-result">
+                <div class="result-content">
+                  <h3 class="result-title">
+                    <a href="/posts/${post.slug}">${highlightedTitle}</a>
+                  </h3>
+                  <p class="result-description">${highlightedPreview}</p>
+                  <div class="result-meta">
+                    <time datetime="${post.date.toISOString()}">${post.date.toLocaleDateString()}</time>
+                    ${post.categories.length > 0 ? `<span class="result-categories">${post.categories.join(', ')}</span>` : ''}
+                  </div>
+                </div>
+                ${post.image ? `
+                  <div class="result-image">
+                    <img src="${post.image}" alt="${post.title}" loading="lazy" />
+                  </div>
+                ` : ''}
+              </article>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+  });
+</script>
+
+<style>
+  .search-page {
+    padding: 2rem 0;
+  }
+
+  .page-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0 0 1rem 0;
+    color: var(--body-text-color);
+  }
+
+  .page-description {
+    font-size: 1.125rem;
+    color: var(--muted-text);
+    margin: 0 0 3rem 0;
+  }
+
+  .search-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .search-input-container {
+    position: relative;
+    margin-bottom: 2rem;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 1rem 1rem 1rem 3rem;
+    border: 2px solid var(--border-color);
+    border-radius: 0.75rem;
+    background: var(--card-bg);
+    color: var(--body-text-color);
+    font-size: 1rem;
+    transition: all 0.2s ease;
+  }
+
+  .search-input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  .search-input::placeholder {
+    color: var(--muted-text);
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    color: var(--muted-text);
+  }
+
+  .search-results {
+    min-height: 200px;
+  }
+
+  .search-placeholder,
+  .no-results {
+    text-align: center;
+    color: var(--muted-text);
+    font-style: italic;
+  }
+
+  .results-count {
+    margin-bottom: 1.5rem;
+    color: var(--muted-text);
+    font-size: 0.875rem;
+  }
+
+  .results-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .search-result {
+    display: flex;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    transition: all 0.2s ease;
+  }
+
+  .search-result:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  .result-content {
+    flex: 1;
+  }
+
+  .result-title {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+
+  .result-title a {
+    color: var(--body-text-color);
+    text-decoration: none;
+  }
+
+  .result-title a:hover {
+    color: var(--accent-color);
+  }
+
+  .result-description {
+    margin: 0 0 1rem 0;
+    color: var(--muted-text);
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  .result-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.875rem;
+    color: var(--muted-text);
+  }
+
+  .result-categories {
+    color: var(--accent-color);
+  }
+
+  .result-image {
+    flex-shrink: 0;
+    width: 120px;
+    height: 80px;
+    overflow: hidden;
+    border-radius: 0.5rem;
+  }
+
+  .result-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  mark {
+    background-color: rgba(59, 130, 246, 0.2);
+    color: inherit;
+    padding: 0.1em 0.2em;
+    border-radius: 0.2em;
+  }
+
+  @media (max-width: 768px) {
+    .page-title {
+      font-size: 2rem;
+    }
+    
+    .search-result {
+      flex-direction: column;
+    }
+    
+    .result-image {
+      width: 100%;
+      height: 200px;
+    }
+  }
+</style> 

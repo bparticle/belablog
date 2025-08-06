@@ -1,9 +1,0 @@
-<div class="calendar-month">
-  <h3>{{ .Month | dateFormat "January" }}</h3>
-  <div class="calendar-days">
-      {{ $days := .Pages | group "Date.Day" }}
-      {{ range $days }}
-          {{ partial "calendar/day.html" (dict "Day" .Key "Pages" .Pages) }}
-      {{ end }}
-  </div>
-</div>

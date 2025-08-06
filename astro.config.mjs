@@ -26,5 +26,15 @@ export default defineConfig({
     ssr: {
       external: ['svgo'],
     },
+    server: {
+      watch: {
+        usePolling: true,
+        interval: 1000,
+      },
+    },
+  },
+  dev: {
+    port: 4321,
+    host: true,
   },
 }); 

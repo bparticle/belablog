@@ -1,36 +1,35 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import Header from '../../components/Header.astro';
-import Footer from '../../components/Footer.astro';
+import LeftSidebar from '../../components/LeftSidebar.astro';
+import RightSidebar from '../../components/RightSidebar.astro';
 import { getCollection } from 'astro:content';
 
 const categories = await getCollection('categories');
 const posts = await getCollection('posts');
 
 // Count posts per category
-const categoryCounts = new Map();
+const categoryCounts = {};
 posts.forEach(post => {
   if (post.data.categories) {
     post.data.categories.forEach(category => {
-      const count = categoryCounts.get(category) || 0;
-      categoryCounts.set(category, count + 1);
+      categoryCounts[category] = (categoryCounts[category] || 0) + 1;
     });
   }
 });
 ---
 
 <Layout title="Categories - Béla's Blog" description="Browse posts by category">
-  <Header />
-  
-  <main class="main-content">
-    <div class="container">
+  <div class="main-layout">
+    <LeftSidebar />
+    
+    <main class="main-content">
       <section class="categories-page">
         <h1 class="page-title">Categories</h1>
         <p class="page-description">Browse posts by category</p>
         
         <div class="categories-grid">
           {categories.map((category) => {
-            const postCount = categoryCounts.get(category.data.title) || 0;
+            const postCount = categoryCounts[category.data.title] || 0;
             return (
               <a href={`/categories/${category.id}`} class="category-card">
                 <div class="category-content">
@@ -45,10 +44,10 @@ posts.forEach(post => {
           })}
         </div>
       </section>
-    </div>
-  </main>
-  
-  <Footer />
+    </main>
+    
+    <RightSidebar />
+  </div>
 </Layout>
 
 <style>
@@ -122,4 +121,4 @@ posts.forEach(post => {
       grid-template-columns: 1fr;
     }
   }
-</style> 
+</style>

@@ -24,7 +24,7 @@ const socialImageURL = image ? new URL(image, Astro.url) : undefined;
 ---
 
 <!doctype html>
-<html lang="nl">
+<html lang="nl" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
@@ -71,8 +71,13 @@ const socialImageURL = image ? new URL(image, Astro.url) : undefined;
   :root {
     --accent-color: #3b82f6;
     --accent-color-darker: #2563eb;
-    --body-text-color: #374151;
+    --body-text-color: #1f2937;
     --body-bg-color: #ffffff;
+    --card-bg: #ffffff;
+    --border-color: #e5e7eb;
+    --muted-text: #6b7280;
+    --sidebar-bg: #f8fafc;
+    --sidebar-border: #e2e8f0;
     --link-background-color: 59, 130, 246;
     --link-background-opacity: 0.1;
     --link-background-opacity-hover: 0.2;
@@ -80,8 +85,15 @@ const socialImageURL = image ? new URL(image, Astro.url) : undefined;
   }
 
   [data-theme="dark"] {
-    --body-text-color: #d1d5db;
+    --accent-color: #60a5fa;
+    --accent-color-darker: #3b82f6;
+    --body-text-color: #f9fafb;
     --body-bg-color: #111827;
+    --card-bg: #1f2937;
+    --border-color: #374151;
+    --muted-text: #9ca3af;
+    --sidebar-bg: #1f2937;
+    --sidebar-border: #374151;
   }
 
   * {
@@ -115,9 +127,42 @@ const socialImageURL = image ? new URL(image, Astro.url) : undefined;
   }
 
   .container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
     padding: 0 1rem;
+  }
+
+  .main-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr 300px;
+    min-height: 100vh;
+    gap: 0;
+  }
+
+  .sidebar {
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--sidebar-border);
+    padding: 2rem 1.5rem;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .main-content {
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .right-sidebar {
+    background: var(--sidebar-bg);
+    border-left: 1px solid var(--sidebar-border);
+    padding: 2rem 1.5rem;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
   }
 
   .section-title {
@@ -132,5 +177,26 @@ const socialImageURL = image ? new URL(image, Astro.url) : undefined;
 
   .section-title a {
     color: var(--body-text-color);
+  }
+
+  @media (max-width: 1200px) {
+    .main-layout {
+      grid-template-columns: 280px 1fr;
+    }
+    .right-sidebar {
+      display: none;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .main-layout {
+      grid-template-columns: 1fr;
+    }
+    .sidebar {
+      display: none;
+    }
+    .main-content {
+      padding: 1rem;
+    }
   }
 </style> 

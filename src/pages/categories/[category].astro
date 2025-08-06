@@ -1,42 +1,41 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
-import Header from '../../components/Header.astro';
-import Footer from '../../components/Footer.astro';
+import LeftSidebar from '../../components/LeftSidebar.astro';
+import RightSidebar from '../../components/RightSidebar.astro';
 
-export async function getStaticPaths() {
-  const categories = await getCollection('categories');
-  return categories.map((category) => ({
-    params: { category: category.id },
-    props: { category },
-  }));
+// Get the category from the URL
+const { category } = Astro.params;
+
+// Get the category data
+const categories = await getCollection('categories');
+const categoryData = categories.find(c => c.id === category);
+
+if (!categoryData) {
+  return Astro.redirect('/404');
 }
 
-const { category } = Astro.props;
 const posts = await getCollection('posts');
 
 // Filter posts by this category
 const categoryPosts = posts.filter(post => 
-  post.data.categories && 
-  post.data.categories.some(cat => 
-    cat.toLowerCase() === category.data.title.toLowerCase()
-  )
-).sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+  post.data.categories && post.data.categories.includes(categoryData.data.title)
+);
 ---
 
 <Layout 
-  title={`${category.data.title} - Béla's Blog`}
-  description={category.data.description || `Posts in ${category.data.title} category`}
+  title={`${categoryData.data.title} - Béla's Blog`}
+  description={categoryData.data.description || `Posts in ${categoryData.data.title} category`}
 >
-  <Header />
-  
-  <main class="main-content">
-    <div class="container">
+  <div class="main-layout">
+    <LeftSidebar />
+    
+    <main class="main-content">
       <section class="category-page">
         <header class="category-header">
-          <h1 class="category-title">{category.data.title}</h1>
-          {category.data.description && (
-            <p class="category-description">{category.data.description}</p>
+          <h1 class="category-title">{categoryData.data.title}</h1>
+          {categoryData.data.description && (
+            <p class="category-description">{categoryData.data.description}</p>
           )}
           <div class="category-count">{categoryPosts.length} posts</div>
         </header>
@@ -83,10 +82,10 @@ const categoryPosts = posts.filter(post =>
           </div>
         )}
       </section>
-    </div>
-  </main>
-  
-  <Footer />
+    </main>
+    
+    <RightSidebar />
+  </div>
 </Layout>
 
 <style>

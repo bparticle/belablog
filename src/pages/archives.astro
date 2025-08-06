@@ -1,7 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
+import LeftSidebar from '../components/LeftSidebar.astro';
+import RightSidebar from '../components/RightSidebar.astro';
 import { getCollection } from 'astro:content';
 
 // Get all posts, sorted by date
@@ -22,10 +22,10 @@ posts.forEach(post => {
 ---
 
 <Layout title="Archives - Béla's Blog" description="All posts in chronological order">
-  <Header />
-  
-  <main class="main-content">
-    <div class="container">
+  <div class="main-layout">
+    <LeftSidebar />
+    
+    <main class="main-content">
       <section class="archives-page">
         <h1 class="page-title">Archives</h1>
         <p class="page-description">All posts in chronological order</p>
@@ -69,10 +69,10 @@ posts.forEach(post => {
           ))}
         </div>
       </section>
-    </div>
-  </main>
-  
-  <Footer />
+    </main>
+    
+    <RightSidebar />
+  </div>
 </Layout>
 
 <style>

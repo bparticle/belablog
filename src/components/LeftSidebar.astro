@@ -1,0 +1,242 @@
+---
+import { getCollection } from 'astro:content';
+
+// Get categories for navigation
+const categories = await getCollection('categories');
+---
+
+<aside class="sidebar">
+  <div class="profile-section">
+    <div class="profile-image">
+      <img src="/avatar.jpg" alt="Béla" />
+      <div class="profile-overlay">
+        <span class="emoji">📱</span>
+      </div>
+    </div>
+    
+    <div class="blog-info">
+      <h1 class="blog-title">Béla's Blog</h1>
+      <p class="blog-description">Allemaal dingetjes die Béla doet</p>
+    </div>
+  </div>
+
+  <nav class="navigation">
+    <ul class="nav-list">
+      <li class="nav-item">
+        <a href="/" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9,22 9,12 15,12 15,22"/>
+          </svg>
+          Home
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="/archives" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 8v13H3V8"/>
+            <path d="M1 3h22v5H1z"/>
+            <path d="M10 12h4"/>
+          </svg>
+          Archives
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="/search" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.35-4.35"/>
+          </svg>
+          Search
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="/links" class="nav-link">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+          </svg>
+          Links
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="language-selector">
+      <span class="language-label">English</span>
+      <svg class="dropdown-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="6,9 12,15 18,9"/>
+      </svg>
+      <span class="language-icon">A</span>
+    </div>
+    
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+      <svg class="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </button>
+  </div>
+</aside>
+
+<script>
+  // Theme toggle functionality
+  const themeToggle = document.getElementById('theme-toggle');
+  const html = document.documentElement;
+  
+  // Check for saved theme preference or default to dark
+  const savedTheme = localStorage.getItem('theme') || 'dark';
+  html.setAttribute('data-theme', savedTheme);
+  
+  themeToggle?.addEventListener('click', () => {
+    const currentTheme = html.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+  });
+</script>
+
+<style>
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .profile-section {
+    text-align: center;
+  }
+
+  .profile-image {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1rem;
+  }
+
+  .profile-image img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .profile-overlay {
+    position: absolute;
+    bottom: -5px;
+    right: -5px;
+    background: var(--accent-color);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--sidebar-bg);
+  }
+
+  .emoji {
+    font-size: 14px;
+  }
+
+  .blog-info {
+    text-align: center;
+  }
+
+  .blog-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    color: var(--body-text-color);
+  }
+
+  .blog-description {
+    font-size: 0.875rem;
+    color: var(--muted-text);
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .navigation {
+    flex: 1;
+  }
+
+  .nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .nav-item {
+    margin-bottom: 0.5rem;
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    color: var(--body-text-color);
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .nav-link:hover {
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--accent-color);
+  }
+
+  .nav-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  .sidebar-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+  }
+
+  .language-selector {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--muted-text);
+  }
+
+  .language-icon {
+    font-weight: bold;
+    color: var(--accent-color);
+  }
+
+  .dropdown-icon {
+    width: 12px;
+    height: 12px;
+  }
+
+  .theme-toggle {
+    background: none;
+    border: none;
+    color: var(--muted-text);
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    transition: all 0.2s ease;
+  }
+
+  .theme-toggle:hover {
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--accent-color);
+  }
+
+  .theme-icon {
+    width: 18px;
+    height: 18px;
+  }
+</style> 

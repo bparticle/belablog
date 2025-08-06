@@ -1,10 +1,12 @@
 # Béla's Blog - Astro Edition 🚀
 
-A modern, fast blog built with Astro for Béla's creative adventures. This is a complete migration from Hugo to Astro, offering better performance, easier content management, and a more modern development experience.
+A modern, fast blog built with Astro for Béla's creative adventures. This is a complete migration from Hugo to Astro, featuring a beautiful three-column layout with dark mode and easy content management.
 
 ## ✨ Features
 
 - **Lightning Fast**: Built with Astro for optimal performance
+- **Three-Column Layout**: Left sidebar, main content, and right sidebar
+- **Dark Mode**: Beautiful dark theme with theme toggle
 - **Easy Content Management**: Just create markdown files to add new posts
 - **Beautiful Design**: Modern, responsive design with smooth animations
 - **Category System**: Organize posts by categories
@@ -12,6 +14,18 @@ A modern, fast blog built with Astro for Béla's creative adventures. This is a 
 - **Video Support**: Native video embedding
 - **SEO Optimized**: Built-in SEO features and meta tags
 - **Netlify Ready**: One-click deployment to Netlify
+
+## 🎨 Design
+
+The blog features a modern three-column layout inspired by the original Hugo design:
+
+- **Left Sidebar**: Profile picture, blog title, navigation menu, language selector, dark mode toggle
+- **Main Content**: Blog posts with featured images and metadata
+- **Right Sidebar**: Search bar, archives, categories, and tags
+
+### Dark Mode
+
+The site comes with a beautiful dark theme by default, with a theme toggle in the left sidebar. The design uses CSS variables for easy customization.
 
 ## 🚀 Quick Start
 

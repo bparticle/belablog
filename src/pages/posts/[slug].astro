@@ -1,8 +1,8 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
-import Header from '../../components/Header.astro';
-import Footer from '../../components/Footer.astro';
+import LeftSidebar from '../../components/LeftSidebar.astro';
+import RightSidebar from '../../components/RightSidebar.astro';
 
 // Get the slug from the URL
 const { slug } = Astro.params;
@@ -28,10 +28,10 @@ const { Content } = await post.render();
   categories={post.data.categories}
   tags={post.data.tags}
 >
-  <Header />
-  
-  <main class="main-content">
-    <div class="container">
+  <div class="main-layout">
+    <LeftSidebar />
+    
+    <main class="main-content">
       <article class="post">
         <header class="post-header">
           <div class="post-meta">
@@ -81,10 +81,10 @@ const { Content } = await post.render();
           </footer>
         )}
       </article>
-    </div>
-  </main>
-  
-  <Footer />
+    </main>
+    
+    <RightSidebar />
+  </div>
 </Layout>
 
 <style>

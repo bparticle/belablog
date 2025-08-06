@@ -1,8 +1,0 @@
-<div class="calendar-day">
-  <div class="day-header">{{ .Day | dateFormat "02" }}</div>
-  {{ range .Pages }}
-      {{ range .Params.categories }}
-          <span class="calendar-dot" style="background-color: {{ index $.Site.Params.categoryColors . }};"></span>
-      {{ end }}
-  {{ end }}
-</div>

@@ -99,30 +99,14 @@ function copyImages(hugoPostDir, astroPostDir) {
 
 // Main migration function
 function migrateAllPosts() {
-  const hugoPostsDir = path.join(__dirname, '../content/post');
   const astroPostsDir = path.join(__dirname, '../src/content/posts');
   const astroPublicDir = path.join(__dirname, '../public/posts');
   
   console.log('🚀 Starting migration from Hugo to Astro...\n');
   
-  if (!fs.existsSync(hugoPostsDir)) {
-    console.error('❌ Hugo posts directory not found:', hugoPostsDir);
-    return;
-  }
-  
-  const posts = fs.readdirSync(hugoPostsDir);
-  
-  posts.forEach(postDir => {
-    const hugoPostPath = path.join(hugoPostsDir, postDir, 'index.md');
-    const astroPostPath = path.join(astroPostsDir, `${postDir}.md`);
-    const hugoImagesDir = path.join(hugoPostsDir, postDir);
-    const astroImagesDir = path.join(astroPublicDir, postDir);
-    
-    if (fs.existsSync(hugoPostPath)) {
-      migratePost(hugoPostPath, astroPostPath, postDir);
-      copyImages(hugoImagesDir, astroImagesDir);
-    }
-  });
+  console.log('✅ Migration already completed! Hugo content directory has been removed.');
+  console.log('Your Astro content is located at:', astroPostsDir);
+  console.log('Your public assets are located at:', astroPublicDir);
   
   console.log('\n🎉 Migration complete!');
   console.log('\nNext steps:');
