@@ -32,7 +32,7 @@ const options = {
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://belablog.netlify.app',
+	site: process.env.URL || 'https://belablog.netlify.app',
 
 	markdown: {
 		syntaxHighlight: false,
