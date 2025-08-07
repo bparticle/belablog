@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
     "migrate": "node scripts/migrate-posts.js",
@@ -14,15 +14,32 @@
     "new-post": "node scripts/new-post.js"
   },
   "dependencies": {
-    "astro": "^4.0.0",
+    "@astrojs/check": "0.9.4",
+    "@astrojs/react": "4.2.7",
+    "@astrojs/rss": "4.0.11",
+    "@astrojs/sitemap": "3.4.0",
+    "@astrojs/netlify": "5.0.0",
     "@astrojs/mdx": "^2.0.0",
-    "@astrojs/rss": "^4.0.0",
-    "@astrojs/sitemap": "^3.0.0",
-    "@astrojs/netlify": "^4.0.0",
+    "@tailwindcss/vite": "4.1.11",
+    "@types/react": "19.1.8",
+    "@types/react-dom": "19.1.6",
+    "@vercel/analytics": "1.5.0",
+    "astro": "5.7.14",
+    "canvas-confetti": "1.9.3",
+    "mdast-util-to-string": "4.0.0",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "reading-time": "1.5.0",
+    "rehype-pretty-code": "0.14.1",
+    "tailwindcss": "4.1.11",
+    "typescript": "5.8.3",
     "sharp": "^0.33.0"
   },
   "devDependencies": {
+    "@tailwindcss/typography": "0.5.16",
     "@types/node": "^20.0.0",
-    "typescript": "^5.0.0"
+    "prettier": "3.6.2",
+    "prettier-plugin-astro": "0.14.1",
+    "prettier-plugin-tailwindcss": "0.6.14"
   }
 } 

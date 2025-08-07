@@ -1,398 +1,58 @@
 ---
+import Base from '@/layouts/Base.astro';
+import Section from '@/components/Section.astro';
+import Card from '@/components/Card.astro';
 import { getCollection } from 'astro:content';
-import Layout from '../layouts/Layout.astro';
-import LeftSidebar from '../components/LeftSidebar.astro';
-import RightSidebar from '../components/RightSidebar.astro';
+import { AppConfig } from '@/utils/AppConfig';
 
-// Get all posts for search index
 const posts = await getCollection('posts');
-
-// Create search index
-const searchIndex = posts.map(post => ({
-  slug: post.slug,
-  title: post.data.title,
-  description: post.data.description || '',
-  categories: post.data.categories || [],
-  tags: post.data.tags || [],
-  date: new Date(post.data.date), // Convert to Date object
-  image: post.data.image,
-  // Create searchable text content
-  content: `${post.data.title} ${post.data.description || ''} ${(post.data.categories || []).join(' ')} ${(post.data.tags || []).join(' ')}`.toLowerCase()
-}));
 ---
 
-<Layout 
-  title="Search - Béla's Blog"
-  description="Search through all blog posts"
-  type="website"
->
-  <div class="main-layout">
-    <LeftSidebar />
+<Base head={{ title: `Search | ${AppConfig.title}`, description: AppConfig.description }}>
+  <Section>
+    <div class="text-center mb-12">
+      <h1 class="text-4xl font-bold mb-4">Search Posts</h1>
+      <p class="text-xl text-gray-600 dark:text-gray-400">Find what you're looking for</p>
+    </div>
     
-    <main class="main-content">
-      <div class="search-container">
-        <h1 class="search-title">Search Posts</h1>
-        
-        <div class="search-input-container">
-          <input 
-            type="text" 
-            id="search-input" 
-            placeholder="Search posts, categories, tags..."
-            class="search-input"
-            autocomplete="off"
-          />
-          <div class="search-icon">🔍</div>
-        </div>
-        
-        <div class="search-stats">
-          <span id="results-count">Found <span id="results-number">0</span> posts</span>
-        </div>
-        
-        <div id="search-results" class="search-results">
-          <!-- Search results will be populated here -->
-        </div>
-        
-        <div id="no-results" class="no-results" style="display: none;">
-          <p>No posts found matching your search.</p>
-          <p>Try different keywords or browse all posts.</p>
-        </div>
-      </div>
-    </main>
+    <div class="mb-8">
+      <input 
+        type="text" 
+        id="search-input"
+        placeholder="Search posts..."
+        class="w-full max-w-md mx-auto px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+      />
+    </div>
     
-    <RightSidebar />
-  </div>
-</Layout>
+    <div id="search-results" class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {posts.map((post) => <Card post={post} />)}
+    </div>
+  </Section>
+</Base>
 
-<script define:vars={{ searchIndex }}>
-  // Search functionality
-  class BlogSearch {
-    constructor() {
-      this.searchIndex = searchIndex;
-      this.searchInput = document.getElementById('search-input');
-      this.resultsContainer = document.getElementById('search-results');
-      this.noResults = document.getElementById('no-results');
-      this.resultsCount = document.getElementById('results-count');
-      this.resultsNumber = document.getElementById('results-number');
-      
+<script>
+  const searchInput = document.getElementById('search-input') as HTMLInputElement;
+  const searchResults = document.getElementById('search-results');
+  const allPosts = Array.from(searchResults?.children || []);
 
+  if (searchInput && searchResults) {
+    searchInput.addEventListener('input', (e) => {
+      const target = e.target as HTMLInputElement;
+      const query = target.value.toLowerCase();
       
-      this.init();
-    }
-    
-    init() {
-      this.searchInput.addEventListener('input', (e) => {
-        this.performSearch(e.target.value);
-      });
-      
-      this.searchInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-          this.clearSearch();
+      allPosts.forEach((postCard) => {
+        const titleElement = postCard.querySelector('p');
+        const descriptionElement = postCard.querySelector('.line-clamp-6');
+        
+        const title = titleElement?.textContent?.toLowerCase() || '';
+        const description = descriptionElement?.textContent?.toLowerCase() || '';
+        
+        if (title.includes(query) || description.includes(query)) {
+          (postCard as HTMLElement).style.display = 'block';
+        } else {
+          (postCard as HTMLElement).style.display = 'none';
         }
       });
-      
-      // Focus search input on page load
-      this.searchInput.focus();
-      
-      // Show all posts initially
-      this.showAllPosts();
-    }
-    
-    performSearch(query) {
-      if (!query.trim()) {
-        this.showAllPosts();
-        return;
-      }
-      
-      const results = this.searchIndex.filter(post => {
-        const searchQuery = query.toLowerCase();
-        
-        // Search in title, description, categories, and tags
-        return (
-          post.title.toLowerCase().includes(searchQuery) ||
-          post.description.toLowerCase().includes(searchQuery) ||
-          post.categories.some(cat => cat.toLowerCase().includes(searchQuery)) ||
-          post.tags.some(tag => tag.toLowerCase().includes(searchQuery)) ||
-          post.content.includes(searchQuery)
-        );
-      });
-      
-      this.displayResults(results, query);
-    }
-    
-    displayResults(results, query) {
-      this.resultsNumber.textContent = results.length;
-      
-      if (results.length === 0) {
-        this.resultsContainer.innerHTML = '';
-        this.noResults.style.display = 'block';
-        return;
-      }
-      
-      this.noResults.style.display = 'none';
-      
-      const resultsHTML = results.map(post => {
-        const highlightedTitle = this.highlightText(post.title, query);
-        const highlightedDescription = this.highlightText(post.description, query);
-        
-        return `
-          <article class="search-result">
-            <div class="result-image">
-              ${post.image ? `<img src="/posts/${post.slug}/${post.image}" alt="${post.title}" />` : '<div class="no-image">📝</div>'}
-            </div>
-            <div class="result-content">
-                             <div class="result-meta">
-                 <time datetime="${post.date.toISOString()}">
-                   ${post.date.toLocaleDateString('nl-NL', {
-                     year: 'numeric',
-                     month: 'long',
-                     day: 'numeric'
-                   })}
-                 </time>
-                ${post.categories.length > 0 ? `
-                  <div class="result-categories">
-                    ${post.categories.map(cat => `<span class="category-tag">${cat}</span>`).join('')}
-                  </div>
-                ` : ''}
-              </div>
-              <h3 class="result-title">
-                <a href="/posts/${post.slug}">${highlightedTitle}</a>
-              </h3>
-              ${post.description ? `<p class="result-description">${highlightedDescription}</p>` : ''}
-              ${post.tags.length > 0 ? `
-                <div class="result-tags">
-                  ${post.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
-                </div>
-              ` : ''}
-            </div>
-          </article>
-        `;
-      }).join('');
-      
-      this.resultsContainer.innerHTML = resultsHTML;
-    }
-    
-    highlightText(text, query) {
-      if (!query.trim()) return text;
-      
-      const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-      return text.replace(regex, '<mark>$1</mark>');
-    }
-    
-    showAllPosts() {
-      this.resultsNumber.textContent = this.searchIndex.length;
-      this.noResults.style.display = 'none';
-      this.displayResults(this.searchIndex, '');
-    }
-    
-    clearSearch() {
-      this.searchInput.value = '';
-      this.showAllPosts();
-    }
-  }
-  
-  // Initialize search when DOM is loaded
-  document.addEventListener('DOMContentLoaded', () => {
-    // Convert date strings back to Date objects
-    searchIndex.forEach(post => {
-      post.date = new Date(post.date);
     });
-    new BlogSearch();
-  });
-</script>
-
-<style>
-  .search-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 2rem 0;
   }
-  
-  .search-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin: 0 0 2rem 0;
-    color: var(--body-text-color);
-    text-align: center;
-  }
-  
-  .search-input-container {
-    position: relative;
-    margin-bottom: 2rem;
-  }
-  
-  .search-input {
-    width: 100%;
-    padding: 1rem 3rem 1rem 1rem;
-    font-size: 1.125rem;
-    border: 2px solid #e5e7eb;
-    border-radius: 0.75rem;
-    background: var(--body-bg-color);
-    color: var(--body-text-color);
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  }
-  
-  .search-input:focus {
-    outline: none;
-    border-color: var(--accent-color);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-  }
-  
-  .search-icon {
-    position: absolute;
-    right: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 1.25rem;
-    color: #6b7280;
-    pointer-events: none;
-  }
-  
-  .search-stats {
-    margin-bottom: 2rem;
-    font-size: 0.875rem;
-    color: #6b7280;
-  }
-  
-  .search-results {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-  
-  .search-result {
-    display: flex;
-    gap: 1.5rem;
-    padding: 1.5rem;
-    background: var(--body-bg-color);
-    border: 1px solid #e5e7eb;
-    border-radius: 0.75rem;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  
-  .search-result:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  }
-  
-  .result-image {
-    flex-shrink: 0;
-    width: 120px;
-    height: 80px;
-    border-radius: 0.5rem;
-    overflow: hidden;
-    background: #f3f4f6;
-  }
-  
-  .result-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  .no-image {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    background: #f3f4f6;
-  }
-  
-  .result-content {
-    flex: 1;
-    min-width: 0;
-  }
-  
-  .result-meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.5rem;
-    font-size: 0.875rem;
-    color: #6b7280;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-  
-  .result-categories {
-    display: flex;
-    gap: 0.25rem;
-  }
-  
-  .category-tag {
-    background: var(--accent-color);
-    color: white;
-    padding: 0.125rem 0.5rem;
-    border-radius: 0.25rem;
-    font-size: 0.75rem;
-  }
-  
-  .result-title {
-    margin: 0 0 0.5rem 0;
-    font-size: 1.25rem;
-    font-weight: 600;
-  }
-  
-  .result-title a {
-    color: var(--body-text-color);
-    text-decoration: none;
-  }
-  
-  .result-title a:hover {
-    color: var(--accent-color);
-  }
-  
-  .result-description {
-    margin: 0 0 0.75rem 0;
-    color: #6b7280;
-    line-height: 1.5;
-  }
-  
-  .result-tags {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-  }
-  
-  .tag {
-    background: rgba(59, 130, 246, 0.1);
-    color: var(--accent-color);
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    font-size: 0.75rem;
-  }
-  
-  .no-results {
-    text-align: center;
-    padding: 3rem 1rem;
-    color: #6b7280;
-  }
-  
-  .no-results p {
-    margin: 0.5rem 0;
-  }
-  
-  mark {
-    background: rgba(59, 130, 246, 0.2);
-    color: inherit;
-    padding: 0.125rem 0.25rem;
-    border-radius: 0.25rem;
-  }
-  
-  @media (max-width: 768px) {
-    .search-result {
-      flex-direction: column;
-    }
-    
-    .result-image {
-      width: 100%;
-      height: 200px;
-    }
-    
-    .result-meta {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  }
-</style> 
+</script> 

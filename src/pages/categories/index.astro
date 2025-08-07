@@ -1,14 +1,14 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import LeftSidebar from '../../components/LeftSidebar.astro';
-import RightSidebar from '../../components/RightSidebar.astro';
+import Base from '@/layouts/Base.astro';
+import Section from '@/components/Section.astro';
 import { getCollection } from 'astro:content';
+import { AppConfig } from '@/utils/AppConfig';
 
 const categories = await getCollection('categories');
 const posts = await getCollection('posts');
 
 // Count posts per category
-const categoryCounts = {};
+const categoryCounts: Record<string, number> = {};
 posts.forEach(post => {
   if (post.data.categories) {
     post.data.categories.forEach(category => {
@@ -18,107 +18,34 @@ posts.forEach(post => {
 });
 ---
 
-<Layout title="Categories - Béla's Blog" description="Browse posts by category">
-  <div class="main-layout">
-    <LeftSidebar />
+<Base head={{ title: `Categories | ${AppConfig.title}`, description: AppConfig.description }}>
+  <Section>
+    <div class="text-center mb-12">
+      <h1 class="text-4xl font-bold mb-4">Categories</h1>
+      <p class="text-xl text-gray-600 dark:text-gray-400">Browse posts by category</p>
+    </div>
     
-    <main class="main-content">
-      <section class="categories-page">
-        <h1 class="page-title">Categories</h1>
-        <p class="page-description">Browse posts by category</p>
-        
-        <div class="categories-grid">
-          {categories.map((category) => {
-            const postCount = categoryCounts[category.data.title] || 0;
-            return (
-              <a href={`/categories/${category.id}`} class="category-card">
-                <div class="category-content">
-                  <h3 class="category-title">{category.data.title}</h3>
-                  {category.data.description && (
-                    <p class="category-description">{category.data.description}</p>
-                  )}
-                  <div class="category-count">{postCount} posts</div>
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {categories.map((category) => {
+        const postCount = categoryCounts[category.data.title] || 0;
+        return (
+          <a href={`/categories/${category.id}`} class="block">
+            <div class="h-full rounded-2xl bg-stone-200/50 from-orange-900 via-amber-700 to-white p-[1px] text-sm shadow-[inset_0_0_0_1px_rgba(255,255,255,0.4)] hover:bg-gradient-to-r dark:bg-gray-900">
+              <div class="flex h-full w-full flex-col rounded-[1rem] bg-stone-300 p-6 text-gray-900 opacity-90 dark:bg-stone-800 dark:text-white">
+                <h3 class="text-xl font-bold mb-2">{category.data.title}</h3>
+                {category.data.description && (
+                  <p class="text-gray-600 dark:text-gray-400 mb-4 flex-1">
+                    {category.data.description}
+                  </p>
+                )}
+                <div class="text-sm font-medium text-orange-600 dark:text-orange-400">
+                  {postCount} posts
                 </div>
-              </a>
-            );
-          })}
-        </div>
-      </section>
-    </main>
-    
-    <RightSidebar />
-  </div>
-</Layout>
-
-<style>
-  .main-content {
-    min-height: calc(100vh - 200px);
-  }
-
-  .categories-page {
-    padding: 2rem 0;
-  }
-
-  .page-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin: 0 0 1rem 0;
-    color: var(--body-text-color);
-  }
-
-  .page-description {
-    font-size: 1.125rem;
-    color: #6b7280;
-    margin: 0 0 3rem 0;
-  }
-
-  .categories-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 2rem;
-  }
-
-  .category-card {
-    background: var(--body-bg-color);
-    border: 1px solid #e5e7eb;
-    border-radius: 0.75rem;
-    padding: 2rem;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    text-decoration: none;
-  }
-
-  .category-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  }
-
-  .category-title {
-    margin: 0 0 0.5rem 0;
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--body-text-color);
-  }
-
-  .category-description {
-    margin: 0 0 1rem 0;
-    color: #6b7280;
-    font-size: 0.875rem;
-    line-height: 1.5;
-  }
-
-  .category-count {
-    font-size: 0.875rem;
-    color: var(--accent-color);
-    font-weight: 500;
-  }
-
-  @media (max-width: 768px) {
-    .page-title {
-      font-size: 2rem;
-    }
-
-    .categories-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-</style>
+              </div>
+            </div>
+          </a>
+        );
+      })}
+    </div>
+  </Section>
+</Base>

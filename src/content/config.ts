@@ -11,6 +11,8 @@ const posts = defineCollection({
     tags: z.array(z.string()).optional().default([]),
     weight: z.number().optional(),
     draft: z.boolean().optional().default(false),
+    isPinned: z.boolean().optional().default(false),
+    minutesRead: z.string().optional(),
   }),
 });
 

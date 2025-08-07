@@ -24,22 +24,13 @@ const metaImage = image ? new URL(image, Astro.site) : undefined;
 ---
 
 <!DOCTYPE html>
-<html lang="nl" data-theme="dark">
+<html lang="nl" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    
-    <!-- Theme initialization script - prevents flash of unstyled content -->
-    <script is:inline>
-      // Set theme before page renders to prevent flash
-      (function() {
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-      })();
-    </script>
     
     <!-- Canonical URL -->
     <link rel="canonical" href={canonicalURL} />
@@ -72,8 +63,13 @@ const metaImage = image ? new URL(image, Astro.site) : undefined;
     )}
     
     <title>{title}</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   </head>
-  <body>
+  <body class="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">
     <slot />
     
     <!-- Global search shortcut -->
@@ -90,191 +86,6 @@ const metaImage = image ? new URL(image, Astro.site) : undefined;
           }
         }
       });
-      
-      // Show search shortcut hint on first visit
-      if (!localStorage.getItem('search-shortcut-shown')) {
-        setTimeout(() => {
-          const hint = document.createElement('div');
-          hint.style.cssText = `
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--accent-color);
-            color: white;
-            padding: 0.75rem 1rem;
-            border-radius: 0.5rem;
-            font-size: 0.875rem;
-            z-index: 1000;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            animation: slideIn 0.3s ease;
-          `;
-          hint.innerHTML = '💡 Press <kbd>Ctrl+K</kbd> to search';
-          document.body.appendChild(hint);
-          
-          // Remove hint after 5 seconds
-          setTimeout(() => {
-            hint.style.animation = 'slideOut 0.3s ease';
-            setTimeout(() => hint.remove(), 300);
-          }, 5000);
-          
-          localStorage.setItem('search-shortcut-shown', 'true');
-        }, 2000);
-      }
     </script>
-    
-    <style>
-      @keyframes slideIn {
-        from { transform: translateX(100%); opacity: 0; }
-        to { transform: translateX(0); opacity: 1; }
-      }
-      
-      @keyframes slideOut {
-        from { transform: translateX(0); opacity: 1; }
-        to { transform: translateX(100%); opacity: 0; }
-      }
-      
-      kbd {
-        background: rgba(255, 255, 255, 0.2);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        border-radius: 0.25rem;
-        padding: 0.125rem 0.375rem;
-        font-size: 0.75rem;
-        font-family: monospace;
-      }
-    </style>
   </body>
-</html>
-
-<style is:global>
-  :root {
-    --accent-color: #3b82f6;
-    --accent-color-darker: #2563eb;
-    --body-text-color: #1f2937;
-    --body-bg-color: #ffffff;
-    --card-bg: #ffffff;
-    --border-color: #e5e7eb;
-    --muted-text: #6b7280;
-    --sidebar-bg: #f8fafc;
-    --sidebar-border: #e2e8f0;
-    --link-background-color: 59, 130, 246;
-    --link-background-opacity: 0.1;
-    --link-background-opacity-hover: 0.2;
-    --article-line-height: 1.8;
-  }
-
-  [data-theme="dark"] {
-    --accent-color: #60a5fa;
-    --accent-color-darker: #3b82f6;
-    --body-text-color: #f9fafb;
-    --body-bg-color: #111827;
-    --card-bg: #1f2937;
-    --border-color: #374151;
-    --muted-text: #9ca3af;
-    --sidebar-bg: #1f2937;
-    --sidebar-border: #374151;
-  }
-
-  * {
-    box-sizing: border-box;
-  }
-
-  html {
-    font-family: 'Inter', system-ui, sans-serif;
-    background: var(--body-bg-color);
-    color: var(--body-text-color);
-  }
-
-  body {
-    margin: 0;
-    padding: 0;
-    line-height: 1.6;
-  }
-
-  a {
-    text-decoration: none;
-    color: var(--accent-color);
-  }
-
-  a:hover {
-    color: var(--accent-color-darker);
-  }
-
-  img {
-    max-width: 100%;
-    height: auto;
-  }
-
-  .container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 1rem;
-  }
-
-  .main-layout {
-    display: grid;
-    grid-template-columns: 280px 1fr 300px;
-    min-height: 100vh;
-    gap: 0;
-  }
-
-  .sidebar {
-    background: var(--sidebar-bg);
-    border-right: 1px solid var(--sidebar-border);
-    padding: 2rem 1.5rem;
-    position: sticky;
-    top: 0;
-    height: 100vh;
-    overflow-y: auto;
-  }
-
-  .main-content {
-    padding: 2rem;
-    max-width: 800px;
-    margin: 0 auto;
-  }
-
-  .right-sidebar {
-    background: var(--sidebar-bg);
-    border-left: 1px solid var(--sidebar-border);
-    padding: 2rem 1.5rem;
-    position: sticky;
-    top: 0;
-    height: 100vh;
-    overflow-y: auto;
-  }
-
-  .section-title {
-    text-transform: uppercase;
-    margin-top: 0;
-    margin-bottom: 10px;
-    display: block;
-    font-size: 1.6rem;
-    font-weight: bold;
-    color: var(--body-text-color);
-  }
-
-  .section-title a {
-    color: var(--body-text-color);
-  }
-
-  @media (max-width: 1200px) {
-    .main-layout {
-      grid-template-columns: 280px 1fr;
-    }
-    .right-sidebar {
-      display: none;
-    }
-  }
-
-  @media (max-width: 768px) {
-    .main-layout {
-      grid-template-columns: 1fr;
-    }
-    .sidebar {
-      display: none;
-    }
-    .main-content {
-      padding: 1rem;
-    }
-  }
-</style> 
+</html> 

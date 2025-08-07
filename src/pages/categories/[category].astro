@@ -1,220 +1,37 @@
 ---
+import Base from '@/layouts/Base.astro';
+import Section from '@/components/Section.astro';
+import Card from '@/components/Card.astro';
 import { getCollection } from 'astro:content';
-import Layout from '../../layouts/Layout.astro';
-import LeftSidebar from '../../components/LeftSidebar.astro';
-import RightSidebar from '../../components/RightSidebar.astro';
+import { AppConfig } from '@/utils/AppConfig';
 
-// Get the category from the URL
 const { category } = Astro.params;
 
-// Get the category data
-const categories = await getCollection('categories');
-const categoryData = categories.find(c => c.id === category);
-
-if (!categoryData) {
-  return Astro.redirect('/404');
+if (!category) {
+  return Astro.redirect('/categories');
 }
 
 const posts = await getCollection('posts');
-
-// Filter posts by this category
-const categoryPosts = posts.filter(post => 
-  post.data.categories && post.data.categories.includes(categoryData.data.title)
+const filteredPosts = posts.filter(post => 
+  post.data.categories && post.data.categories.includes(category)
 );
+
+if (filteredPosts.length === 0) {
+  return Astro.redirect('/categories');
+}
 ---
 
-<Layout 
-  title={`${categoryData.data.title} - Béla's Blog`}
-  description={categoryData.data.description || `Posts in ${categoryData.data.title} category`}
->
-  <div class="main-layout">
-    <LeftSidebar />
+<Base head={{ title: `${category} | ${AppConfig.title}`, description: AppConfig.description }}>
+  <Section>
+    <div class="text-center mb-12">
+      <h1 class="text-4xl font-bold mb-4">{category}</h1>
+      <p class="text-xl text-gray-600 dark:text-gray-400">
+        {filteredPosts.length} post{filteredPosts.length === 1 ? '' : 's'} in this category
+      </p>
+    </div>
     
-    <main class="main-content">
-      <section class="category-page">
-        <header class="category-header">
-          <h1 class="category-title">{categoryData.data.title}</h1>
-          {categoryData.data.description && (
-            <p class="category-description">{categoryData.data.description}</p>
-          )}
-          <div class="category-count">{categoryPosts.length} posts</div>
-        </header>
-        
-        <div class="posts-grid">
-          {categoryPosts.map((post) => (
-            <article class="post-card">
-              {post.data.image && (
-                <div class="post-image">
-                  <img src={`/posts/${post.slug}/${post.data.image}`} alt={post.data.title} />
-                </div>
-              )}
-              <div class="post-content">
-                <div class="post-meta">
-                  <time datetime={post.data.date.toISOString()}>
-                    {post.data.date.toLocaleDateString('nl-NL', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                    })}
-                  </time>
-                  {post.data.tags && post.data.tags.length > 0 && (
-                    <div class="post-tags">
-                      {post.data.tags.map((tag) => (
-                        <span class="tag">{tag}</span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                <h3 class="post-title">
-                  <a href={`/posts/${post.slug}`}>{post.data.title}</a>
-                </h3>
-                {post.data.description && (
-                  <p class="post-description">{post.data.description}</p>
-                )}
-              </div>
-            </article>
-          ))}
-        </div>
-        
-        {categoryPosts.length === 0 && (
-          <div class="no-posts">
-            <p>No posts found in this category yet.</p>
-          </div>
-        )}
-      </section>
-    </main>
-    
-    <RightSidebar />
-  </div>
-</Layout>
-
-<style>
-  .main-content {
-    min-height: calc(100vh - 200px);
-  }
-
-  .category-page {
-    padding: 2rem 0;
-  }
-
-  .category-header {
-    margin-bottom: 3rem;
-    text-align: center;
-  }
-
-  .category-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin: 0 0 1rem 0;
-    color: var(--body-text-color);
-  }
-
-  .category-description {
-    font-size: 1.125rem;
-    color: #6b7280;
-    margin: 0 0 1rem 0;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .category-count {
-    font-size: 0.875rem;
-    color: var(--accent-color);
-    font-weight: 500;
-  }
-
-  .posts-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 2rem;
-  }
-
-  .post-card {
-    background: var(--body-bg-color);
-    border: 1px solid #e5e7eb;
-    border-radius: 0.75rem;
-    overflow: hidden;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-
-  .post-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  }
-
-  .post-image {
-    width: 100%;
-    height: 200px;
-    overflow: hidden;
-  }
-
-  .post-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .post-content {
-    padding: 1.5rem;
-  }
-
-  .post-meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-    font-size: 0.875rem;
-    color: #6b7280;
-  }
-
-  .post-tags {
-    display: flex;
-    gap: 0.5rem;
-  }
-
-  .tag {
-    background: rgba(59, 130, 246, 0.1);
-    color: var(--accent-color);
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    font-size: 0.75rem;
-  }
-
-  .post-title {
-    margin: 0 0 0.5rem 0;
-    font-size: 1.25rem;
-    font-weight: 600;
-  }
-
-  .post-title a {
-    color: var(--body-text-color);
-  }
-
-  .post-title a:hover {
-    color: var(--accent-color);
-  }
-
-  .post-description {
-    margin: 0;
-    color: #6b7280;
-    font-size: 0.875rem;
-    line-height: 1.5;
-  }
-
-  .no-posts {
-    text-align: center;
-    padding: 4rem 0;
-    color: #6b7280;
-  }
-
-  @media (max-width: 768px) {
-    .category-title {
-      font-size: 2rem;
-    }
-
-    .posts-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-</style> 
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {filteredPosts.map((post) => <Card post={post} />)}
+    </div>
+  </Section>
+</Base> 

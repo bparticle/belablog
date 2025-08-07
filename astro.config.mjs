@@ -1,40 +1,64 @@
 import { defineConfig } from 'astro/config';
-import mdx from '@astrojs/mdx';
-import sitemap from '@astrojs/sitemap';
-import rss from '@astrojs/rss';
+import { remarkReadingTime } from './src/utils/readingTime';
+import rehypePrettyCode from 'rehype-pretty-code';
 import netlify from '@astrojs/netlify/functions';
+import tailwindcss from '@tailwindcss/vite';
+import react from '@astrojs/react';
+import sitemap from '@astrojs/sitemap';
 
+const options = {
+	// Specify the theme to use or a custom theme json, in our case
+	// it will be a moonlight-II theme from
+	// https://github.com/atomiks/moonlight-vscode-theme/blob/master/src/moonlight-ii.json
+	// Callbacks to customize the output of the nodes
+	//theme: json,
+	onVisitLine(node) {
+		// Prevent lines from collapsing in `display: grid` mode, and
+		// allow empty lines to be copy/pasted
+		if (node.children.length === 0) {
+			node.children = [
+				{
+					type: 'text',
+					value: ' '
+				}
+			];
+		}
+	},
+	onVisitHighlightedLine(node) {
+		// Adding a class to the highlighted line
+		node.properties.className = ['highlighted'];
+	}
+};
+
+// https://astro.build/config
 export default defineConfig({
-  site: 'https://belablog.netlify.app',
-  integrations: [
-    mdx({
-      syntaxHighlight: 'prism',
-      remarkPlugins: [],
-      rehypePlugins: [],
-    }),
-    sitemap(),
-  ],
-  output: 'server',
-  adapter: netlify(),
-  markdown: {
-    shikiConfig: {
-      theme: 'github-dark',
-      wrap: true
-    }
-  },
-  vite: {
-    ssr: {
-      external: ['svgo'],
-    },
-    server: {
-      watch: {
-        usePolling: true,
-        interval: 1000,
-      },
-    },
-  },
-  dev: {
-    port: 4321,
-    host: true,
-  },
+	site: 'https://belablog.netlify.app',
+
+	markdown: {
+		syntaxHighlight: false,
+		// Disable syntax built-in syntax hightlighting from astro
+		rehypePlugins: [[rehypePrettyCode, options]],
+		remarkPlugins: [remarkReadingTime]
+	},
+
+	integrations: [react(), sitemap()],
+	output: 'server',
+
+	adapter: netlify(),
+	vite: {
+		plugins: [tailwindcss()],
+		ssr: {
+			external: ['svgo'],
+		},
+		server: {
+			watch: {
+				usePolling: true,
+				interval: 1000,
+			},
+		},
+	},
+	dev: {
+		port: 4321,
+		host: true,
+	},
 }); 

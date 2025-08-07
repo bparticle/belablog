@@ -1,8 +1,10 @@
 ---
 import { getCollection } from 'astro:content';
-import Layout from '../../layouts/Layout.astro';
-import LeftSidebar from '../../components/LeftSidebar.astro';
-import RightSidebar from '../../components/RightSidebar.astro';
+import Base from '@/layouts/Base.astro';
+import Section from '@/components/Section.astro';
+import Tags from '@/components/Tags.astro';
+import { formatDate } from '@/utils/data.util';
+import { AppConfig } from '@/utils/AppConfig';
 
 // Get the slug from the URL
 const { slug } = Astro.params;
@@ -19,263 +21,50 @@ if (!post) {
 const { Content } = await post.render();
 ---
 
-<Layout 
-  title={post.data.title}
-  description={post.data.description}
-  image={post.data.image ? `/posts/${post.slug}/${post.data.image}` : undefined}
-  type="article"
-  date={post.data.date}
-  categories={post.data.categories}
-  tags={post.data.tags}
->
-  <div class="main-layout">
-    <LeftSidebar />
-    
-    <main class="main-content">
-      <article class="post">
-        <header class="post-header">
-          <div class="post-meta">
-            <time datetime={post.data.date.toISOString()}>
-              {post.data.date.toLocaleDateString('nl-NL', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-              })}
-            </time>
-            {post.data.categories && post.data.categories.length > 0 && (
-              <div class="post-categories">
-                {post.data.categories.map((category) => (
-                  <a href={`/categories/${category.toLowerCase()}`} class="category-tag">
-                    {category}
-                  </a>
-                ))}
-              </div>
-            )}
-          </div>
-          
-          <h1 class="post-title">{post.data.title}</h1>
-          
-          {post.data.description && (
-            <p class="post-description">{post.data.description}</p>
+<Base head={{ 
+  title: `${post.data.title} | ${AppConfig.title}`, 
+  description: post.data.description || AppConfig.description 
+}}>
+  <Section>
+    <article class="prose prose-lg dark:prose-invert prose-stone mx-auto">
+      <header class="mb-8">
+        <div class="flex items-center gap-2 mb-4 text-sm text-gray-600 dark:text-gray-400">
+          <time datetime={post.data.date.toISOString()}>
+            {formatDate(post.data.date.toISOString())}
+          </time>
+          {post.data.minutesRead && (
+            <span>• {post.data.minutesRead}</span>
           )}
-          
-          {post.data.image && (
-            <div class="post-image">
-              <img src={`/posts/${post.slug}/${post.data.image}`} alt={post.data.title} />
-            </div>
-          )}
-        </header>
-        
-        <div class="post-content">
-          <Content />
         </div>
         
-        {post.data.tags && post.data.tags.length > 0 && (
-          <footer class="post-footer">
-            <div class="post-tags">
-              <span class="tags-label">Tags:</span>
-              {post.data.tags.map((tag) => (
-                <span class="tag">{tag}</span>
-              ))}
-            </div>
-          </footer>
+        <h1 class="text-4xl font-bold mb-4">{post.data.title}</h1>
+        
+        {post.data.description && (
+          <p class="text-xl text-gray-600 dark:text-gray-400 mb-6">
+            {post.data.description}
+          </p>
         )}
-      </article>
-    </main>
-    
-    <RightSidebar />
-  </div>
-</Layout>
-
-<style>
-  .main-content {
-    min-height: calc(100vh - 200px);
-  }
-
-  .post {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 2rem 0;
-  }
-
-  .post-header {
-    margin-bottom: 3rem;
-  }
-
-  .post-meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-    font-size: 0.875rem;
-    color: #6b7280;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-
-  .post-categories {
-    display: flex;
-    gap: 0.5rem;
-  }
-
-  .category-tag {
-    background: var(--accent-color);
-    color: white;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    font-size: 0.75rem;
-    text-decoration: none;
-  }
-
-  .category-tag:hover {
-    background: var(--accent-color-darker);
-    color: white;
-  }
-
-  .post-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin: 0 0 1rem 0;
-    color: var(--body-text-color);
-    line-height: 1.2;
-  }
-
-  .post-description {
-    font-size: 1.125rem;
-    color: #6b7280;
-    margin: 0 0 2rem 0;
-    line-height: 1.6;
-  }
-
-  .post-image {
-    margin: 2rem 0;
-    border-radius: 0.75rem;
-    overflow: hidden;
-  }
-
-  .post-image img {
-    width: 100%;
-    height: auto;
-  }
-
-  .post-content {
-    font-size: 1.125rem;
-    line-height: 1.8;
-    color: var(--body-text-color);
-  }
-
-  .post-content h1,
-  .post-content h2,
-  .post-content h3,
-  .post-content h4,
-  .post-content h5,
-  .post-content h6 {
-    margin: 2rem 0 1rem 0;
-    color: var(--body-text-color);
-  }
-
-  .post-content h1 { font-size: 2rem; }
-  .post-content h2 { font-size: 1.75rem; }
-  .post-content h3 { font-size: 1.5rem; }
-  .post-content h4 { font-size: 1.25rem; }
-  .post-content h5 { font-size: 1.125rem; }
-  .post-content h6 { font-size: 1rem; }
-
-  .post-content p {
-    margin: 1rem 0;
-  }
-
-  .post-content ul,
-  .post-content ol {
-    margin: 1rem 0;
-    padding-left: 2rem;
-  }
-
-  .post-content li {
-    margin: 0.5rem 0;
-  }
-
-  .post-content blockquote {
-    border-left: 4px solid var(--accent-color);
-    padding-left: 1rem;
-    margin: 2rem 0;
-    font-style: italic;
-    color: #6b7280;
-  }
-
-  .post-content code {
-    background: rgba(59, 130, 246, 0.1);
-    padding: 0.125rem 0.25rem;
-    border-radius: 0.25rem;
-    font-size: 0.875em;
-  }
-
-  .post-content pre {
-    background: #1f2937;
-    color: #f9fafb;
-    padding: 1rem;
-    border-radius: 0.5rem;
-    overflow-x: auto;
-    margin: 2rem 0;
-  }
-
-  .post-content pre code {
-    background: none;
-    padding: 0;
-  }
-
-  .post-content img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 0.5rem;
-    margin: 1rem 0;
-  }
-
-  .post-content video {
-    max-width: 100%;
-    height: auto;
-    border-radius: 0.5rem;
-    margin: 1rem 0;
-  }
-
-  .post-footer {
-    margin-top: 3rem;
-    padding-top: 2rem;
-    border-top: 1px solid #e5e7eb;
-  }
-
-  .post-tags {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-  }
-
-  .tags-label {
-    font-weight: 600;
-    color: var(--body-text-color);
-  }
-
-  .tag {
-    background: rgba(59, 130, 246, 0.1);
-    color: var(--accent-color);
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    font-size: 0.75rem;
-  }
-
-  @media (max-width: 768px) {
-    .post-title {
-      font-size: 2rem;
-    }
-
-    .post-content {
-      font-size: 1rem;
-    }
-
-    .post-meta {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  }
-</style> 
+        
+        {post.data.image && (
+          <div class="mb-8">
+            <img 
+              src={`/posts/${post.slug}/${post.data.image}`} 
+              alt={post.data.title}
+              class="w-full h-auto rounded-lg"
+            />
+          </div>
+        )}
+        
+        {post.data.tags && post.data.tags.length > 0 && (
+          <div class="mb-8">
+            <Tags tags={post.data.tags} withHref={true} />
+          </div>
+        )}
+      </header>
+      
+      <div class="prose prose-lg dark:prose-invert prose-stone max-w-none">
+        <Content />
+      </div>
+    </article>
+  </Section>
+</Base> 
