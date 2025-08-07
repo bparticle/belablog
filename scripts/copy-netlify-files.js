@@ -31,11 +31,23 @@ if (fs.existsSync(sourceDir)) {
     }
   }
   
-  copyDir(sourceDir, targetDir);
-  console.log('✅ Copied SSR function to dist/.netlify/functions/ssr/');
+  try {
+    copyDir(sourceDir, targetDir);
+    console.log('✅ Copied SSR function to dist/.netlify/functions/ssr/');
+  } catch (error) {
+    console.error('❌ Error copying SSR function:', error.message);
+    process.exit(1);
+  }
+} else {
+  console.log('⚠️  Source directory .netlify/v1/functions/ssr not found, skipping copy');
 }
 
 // Create _redirects file
-const redirectsContent = '/*    /.netlify/functions/ssr   200';
-fs.writeFileSync('dist/_redirects', redirectsContent);
-console.log('✅ Created _redirects file in dist/'); 
+try {
+  const redirectsContent = '/*    /.netlify/functions/ssr   200';
+  fs.writeFileSync('dist/_redirects', redirectsContent);
+  console.log('✅ Created _redirects file in dist/');
+} catch (error) {
+  console.error('❌ Error creating _redirects file:', error.message);
+  process.exit(1);
+} 
