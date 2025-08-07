@@ -1,12 +1,12 @@
 [build]
-  command = "npm install --legacy-peer-deps && npm run build"
-  publish = "dist"
+  command = "npm run build"
+  publish = "dist/client"
 
 [build.environment]
   NODE_VERSION = "18"
 
-# Single redirect rule for SSR - this is the standard Astro SSR setup
+# For Node adapter, we need to redirect to the server function
 [[redirects]]
   from = "/*"
-  to = "/.netlify/functions/entry"
+  to = "/.netlify/functions/ssr"
   status = 200
