@@ -5,13 +5,14 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro check && astro build",
+    "build": "astro check && astro build && npm run copy-functions",
     "preview": "astro preview",
     "astro": "astro",
     "migrate": "node scripts/migrate-posts.js",
     "fix-posts": "node scripts/fix-posts.js",
     "fix-all": "node scripts/fix-all-posts.js",
-    "new-post": "node scripts/new-post.js"
+    "new-post": "node scripts/new-post.js",
+    "copy-functions": "if exist .netlify\\v1\\functions\\ssr (xcopy .netlify\\v1\\functions\\ssr dist\\.netlify\\functions\\ssr /E /I /Y)"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
