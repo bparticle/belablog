@@ -4,9 +4,3 @@
 
 [build.environment]
   NODE_VERSION = "18"
-
-# For Netlify adapter, redirect to the ssr function (not entry)
-[[redirects]]
-  from = "/*"
-  to = "/.netlify/functions/ssr"
-  status = 200
