@@ -1,7 +1,7 @@
 import { defineConfig } from 'astro/config';
 import { remarkReadingTime } from './src/utils/readingTime';
 import rehypePrettyCode from 'rehype-pretty-code';
-import node from '@astrojs/node';
+import vercel from '@astrojs/vercel';
 import tailwind from '@astrojs/tailwind';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
@@ -44,8 +44,10 @@ export default defineConfig({
 	integrations: [react(), sitemap(), tailwind()],
 	output: 'server',
 
-	adapter: node({
-		mode: 'standalone'
+	adapter: vercel({
+		webAnalytics: {
+			enabled: false
+		}
 	}),
 	vite: {
 		ssr: {

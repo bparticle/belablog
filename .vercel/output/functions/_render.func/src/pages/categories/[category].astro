@@ -1,0 +1,37 @@
+---
+import Base from '@/layouts/Base.astro';
+import Section from '@/components/Section.astro';
+import Card from '@/components/Card.astro';
+import { getCollection } from 'astro:content';
+import { AppConfig } from '@/utils/AppConfig';
+
+const { category } = Astro.params;
+
+if (!category) {
+  return Astro.redirect('/categories');
+}
+
+const posts = await getCollection('posts');
+const filteredPosts = posts.filter(post => 
+  post.data.categories && post.data.categories.includes(category)
+);
+
+if (filteredPosts.length === 0) {
+  return Astro.redirect('/categories');
+}
+---
+
+<Base head={{ title: `${category} | ${AppConfig.title}`, description: AppConfig.description }}>
+  <Section>
+    <div class="text-center mb-12">
+      <h1 class="text-4xl font-bold mb-4">{category}</h1>
+      <p class="text-xl text-gray-600 dark:text-gray-400">
+        {filteredPosts.length} post{filteredPosts.length === 1 ? '' : 's'} in this category
+      </p>
+    </div>
+    
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {filteredPosts.map((post) => <Card post={post} />)}
+    </div>
+  </Section>
+</Base> 
