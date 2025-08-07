@@ -1,7 +1,7 @@
 import { defineConfig } from 'astro/config';
 import { remarkReadingTime } from './src/utils/readingTime';
 import rehypePrettyCode from 'rehype-pretty-code';
-import netlify from '@astrojs/netlify';
+import node from '@astrojs/node';
 import tailwind from '@astrojs/tailwind';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
@@ -44,7 +44,9 @@ export default defineConfig({
 	integrations: [react(), sitemap(), tailwind()],
 	output: 'server',
 
-	adapter: netlify(),
+	adapter: node({
+		mode: 'standalone'
+	}),
 	vite: {
 		ssr: {
 			external: ['svgo'],
