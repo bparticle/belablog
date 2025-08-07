@@ -12,7 +12,7 @@
     "fix-posts": "node scripts/fix-posts.js",
     "fix-all": "node scripts/fix-all-posts.js",
     "new-post": "node scripts/new-post.js",
-    "copy-functions": "if exist .netlify\\v1\\functions\\ssr (xcopy .netlify\\v1\\functions\\ssr dist\\.netlify\\functions\\ssr /E /I /Y)"
+    "copy-functions": "node scripts/copy-functions.js"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
