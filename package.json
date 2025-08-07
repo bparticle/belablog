@@ -5,18 +5,19 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "astro build && npm run create-redirects",
     "preview": "astro preview",
     "astro": "astro",
     "migrate": "node scripts/migrate-posts.js",
     "fix-posts": "node scripts/fix-posts.js",
     "fix-all": "node scripts/fix-all-posts.js",
-    "new-post": "node scripts/new-post.js"
+    "new-post": "node scripts/new-post.js",
+    "create-redirects": "node scripts/create-redirects.js"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
     "@astrojs/mdx": "^4.0.0",
-    "@astrojs/node": "^9.3.3",
+    "@astrojs/netlify": "^6.5.6",
     "@astrojs/react": "^4.2.7",
     "@astrojs/rss": "^4.0.11",
     "@astrojs/sitemap": "^3.4.0",
