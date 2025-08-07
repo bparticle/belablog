@@ -1,3 +1,4 @@
-import { handler as ssrHandler } from '../../dist/server/entry.mjs';
-
-export const handler = ssrHandler; 
+export const handler = async (event, context) => {
+  const { handler: ssrHandler } = await import('../../dist/server/entry.mjs');
+  return ssrHandler(event, context);
+}; 
