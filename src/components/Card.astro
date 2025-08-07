@@ -16,9 +16,18 @@ const isPinned = post.data.isPinned === true;
 		class="h-full rounded-2xl bg-stone-200/50 from-orange-900 via-amber-700 to-white p-[1px] text-sm shadow-[inset_0_0_0_1px_rgba(255,255,255,0.4)] hover:bg-gradient-to-r dark:bg-gray-900"
 	>
 		<div
-			class="flex h-full w-full flex-col rounded-[1rem] bg-stone-300 p-4 text-gray-900 opacity-90 dark:bg-stone-800 dark:text-white"
+			class="flex h-full w-full flex-col rounded-[1rem] bg-stone-300 text-gray-900 opacity-90 dark:bg-stone-800 dark:text-white overflow-hidden"
 		>
-			<div class="flex-auto">
+			{post.data.image && (
+				<div class="w-full h-48 overflow-hidden">
+					<img 
+						src={`/posts/${post.slug}/${post.data.image}`} 
+						alt={post.data.title}
+						class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+					/>
+				</div>
+			)}
+			<div class="flex-auto p-4">
 				<div class="flex flex-col justify-between gap-2 pb-4 text-xs">
 					<div class="flex items-center gap-2">
 						{isPinned && <PinnedBadge size="sm" />}
@@ -34,7 +43,7 @@ const isPinned = post.data.isPinned === true;
 				<Tags tags={post.data.tags || []} />
 				<p class="line-clamp-6 pt-4">{post.data.description || ''}</p>
 			</div>
-			<p class="pt-4 underline">read more →</p>
+			<p class="pt-4 px-4 pb-4 underline">read more →</p>
 		</div>
 	</div>
 </a> 
