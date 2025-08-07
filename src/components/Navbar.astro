@@ -118,8 +118,9 @@ import Section from './Section.astro';
 	}
 
 	if (lightSwitches.length > 0) {
-		// Initialize theme based on localStorage
-		const isDarkTheme = localStorage.getItem('theme') === 'dark';
+		// Initialize theme based on localStorage, default to dark for new users
+		const savedTheme = localStorage.getItem('theme');
+		const isDarkTheme = savedTheme === null ? true : savedTheme === 'dark';
 		applyTheme(isDarkTheme);
 
 		// Set initial state of switches

@@ -30,6 +30,17 @@ const {
 			rel="icon"
 			href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>😐</text></svg>"
 		/>
+		
+		<!-- Prevent theme flash by setting theme immediately -->
+		<script is:inline>
+			// Immediately set theme to prevent flash
+			const theme = localStorage.getItem('theme') || 'dark';
+			if (theme === 'dark') {
+				document.documentElement.classList.add('dark');
+			} else {
+				document.documentElement.classList.remove('dark');
+			}
+		</script>
 	</head>
 	<body
 		class="flex min-h-screen flex-col bg-stone-100 font-mono text-gray-950 dark:bg-stone-900 dark:text-white"

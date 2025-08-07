@@ -14,10 +14,6 @@ categories:
 
 Nago is de poes uit Kirby spelletjes en Manga Mania boekjes.
 
-### Tekeningen
-
-![](/posts/nago/IMG_20250806_123000_092_optimized.jpg "Nago tekeningen")
-
 ### Kaartjes
 
 ![](/posts/nago/NAGO1_s-ezgif.com-optimize.gif "NAGO animatie 1")
