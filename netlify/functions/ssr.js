@@ -1,10 +1,10 @@
-// Netlify function wrapper for Astro Vercel adapter
+// Netlify function wrapper for Astro Deno adapter
 // This handles the ES module compatibility issues
 
 export const handler = async (event, context) => {
   try {
-    // Import the server module from the Vercel adapter output
-    const serverModule = await import('../../.vercel/output/functions/_render.func/dist/server/entry.mjs');
+    // Import the server module from the Deno adapter output
+    const serverModule = await import('../../dist/server/entry.mjs');
     
     // Get the handler function
     const ssrHandler = serverModule.handler;

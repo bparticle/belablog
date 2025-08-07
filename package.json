@@ -15,12 +15,12 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
+    "@astrojs/deno": "^5.0.1",
     "@astrojs/mdx": "^4.0.0",
     "@astrojs/react": "^4.2.7",
     "@astrojs/rss": "^4.0.11",
     "@astrojs/sitemap": "^3.4.0",
     "@astrojs/tailwind": "^5.0.0",
-    "@astrojs/vercel": "^8.2.5",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@vercel/analytics": "^1.5.0",

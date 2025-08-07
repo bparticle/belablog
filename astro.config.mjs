@@ -1,7 +1,7 @@
 import { defineConfig } from 'astro/config';
 import { remarkReadingTime } from './src/utils/readingTime';
 import rehypePrettyCode from 'rehype-pretty-code';
-import vercel from '@astrojs/vercel';
+import deno from '@astrojs/deno';
 import tailwind from '@astrojs/tailwind';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
@@ -44,11 +44,7 @@ export default defineConfig({
 	integrations: [react(), sitemap(), tailwind()],
 	output: 'server',
 
-	adapter: vercel({
-		webAnalytics: {
-			enabled: false
-		}
-	}),
+	adapter: deno(),
 	vite: {
 		ssr: {
 			external: ['svgo'],
