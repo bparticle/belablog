@@ -5,6 +5,19 @@
 [build.environment]
   NODE_VERSION = "18"
 
+# Handle static files first
+[[redirects]]
+  from = "/_astro/*"
+  to = "/_astro/:splat"
+  status = 200
+
+# Handle static assets
+[[redirects]]
+  from = "/assets/*"
+  to = "/assets/:splat"
+  status = 200
+
+# Handle all other routes with SSR
 [[redirects]]
   from = "/*"
   to = "/.netlify/functions/entry"
